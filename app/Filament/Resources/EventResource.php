@@ -25,6 +25,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class EventResource extends Resource
@@ -158,28 +159,39 @@ class EventResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('starting_at', 'desc')
             ->columns([
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('description'),
+                TextColumn::make('description')
+                    ->toggleable()->toggledHiddenByDefault(),
 
                 TextColumn::make('status'),
 
                 TextColumn::make('starting_at')
-                    ->label('Starting Date')
+                    ->sortable(true)
+                    ->timezone('Asia/Dhaka')
+                    ->dateTime('M d, Y - h:i A')
+                    ->label('Starting Date'),
+
+                TextColumn::make('ending_at')
+                    ->label('Ending Date')
+                    ->toggleable()->toggledHiddenByDefault()
                     ->date(),
 
-                TextColumn::make('ending_at'),
-
-                TextColumn::make('event_link'),
-
-                TextColumn::make('open_for_attendance'),
+                TextColumn::make('event_link')
+                    ->searchable()
+                    ->toggleable()->toggledHiddenByDefault(),
+                ToggleColumn::make('open_for_attendance')
+                    ->sortable(),
+                ToggleColumn::make('strict_attendance')
+                    ->sortable(),
 
                 TextColumn::make('type'),
 
-                TextColumn::make('participation_scope'),
+                TextColumn::make('attendance_scope'),
             ])
             ->filters([
                 //

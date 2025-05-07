@@ -18,6 +18,7 @@ class Event extends Model
         'event_link',
         'event_password',
         'open_for_attendance',
+        'strict_attendance',
         'type',
         'participation_scope',
     ];
@@ -26,7 +27,9 @@ class Event extends Model
     {
         return [
             'starting_at' => 'datetime',
+            'ending_at' => 'datetime',
             'open_for_attendance' => 'boolean',
+            'strict_attendance' => 'boolean',
             'status' => Visibility::class,
             'type' => EventType::class,
             'participation_scope' => ParticipationScope::class,
