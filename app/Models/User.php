@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'gender',
+        'phone',
+        'codeforces_handle',
+        'atcoder_handle',
+        'vjudge_handle',
+        'starting_semester',
+        'department',
+        'student_id',
+        'max_cf_rating',
+
+
     ];
 
     /**
@@ -43,6 +56,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'gender'=>Gender::class,
         ];
     }
 }
