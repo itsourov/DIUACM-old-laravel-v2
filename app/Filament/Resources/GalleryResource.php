@@ -62,6 +62,7 @@ class GalleryResource extends Resource
 
                                 ToggleButtons::make('status')
                                     ->options(Visibility::class)
+                                    ->enum(Visibility::class)
                                     ->inline()
                                     ->default(Visibility::DRAFT)
                                     ->required(),

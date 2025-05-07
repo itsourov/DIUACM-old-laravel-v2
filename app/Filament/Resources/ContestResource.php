@@ -58,6 +58,7 @@ class ContestResource extends Resource
 
                                 ToggleButtons::make('contest_type')
                                     ->options(ContestType::class)
+                                    ->enum(ContestType::class)
                                     ->inline()
                                     ->required(),
 
