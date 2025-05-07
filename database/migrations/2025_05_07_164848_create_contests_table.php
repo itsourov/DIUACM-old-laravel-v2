@@ -11,7 +11,7 @@ return new class extends Migration {
     {
         Schema::create('contests', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->foreignIdFor(Gallery::class)->nullable();
             $table->enum('contest_type', ContestType::toArray());
             $table->string('location')->nullable();
