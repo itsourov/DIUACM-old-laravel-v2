@@ -21,6 +21,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
 
 class TeamResource extends Resource
 {
@@ -30,7 +31,6 @@ class TeamResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $navigationLabel = 'Teams';
     protected static ?int $navigationSort = 2;
-
 
 
     public static function form(Form $form): Form
@@ -43,8 +43,12 @@ class TeamResource extends Resource
                             ->schema([
                                 TextInput::make('name')
                                     ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->unique(
+                                        ignoreRecord: true,
+                                        modifyRuleUsing: fn(Unique $rule, callable $get) => $rule->where('contest_id', $get('contest_id'))
+                                    )
+                                    ->helperText('Team name must be unique within this contest'),
 
                                 Select::make('contest_id')
                                     ->relationship('contest', 'name')
@@ -155,6 +159,7 @@ class TeamResource extends Resource
     {
         return static::getModel()::count();
     }
+
     public static function getNavigationBadgeColor(): ?string
     {
         return 'success';
