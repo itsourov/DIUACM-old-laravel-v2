@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Enums\Visibility;
 use App\Filament\Resources\GalleryResource\Pages;
+use App\Filament\Resources\GalleryyResource\RelationManagers\MediaRelationManager;
 use App\Models\Gallery;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -16,7 +18,6 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class GalleryResource extends Resource
 {
@@ -49,6 +50,17 @@ class GalleryResource extends Resource
                     ->required()
                     ->integer(),
 
+                SpatieMediaLibraryFileUpload::make('images')
+                    ->image()
+                    ->multiple()
+                    ->collection('gallery')
+                    ->reorderable()
+                    ->imageEditor()
+                    ->previewable()
+                    ->columnSpanFull()
+                    ->required(),
+
+
                 Placeholder::make('created_at')
                     ->label('Created Date')
                     ->content(fn(?Gallery $record): string => $record?->created_at?->diffForHumans() ?? '-'),
@@ -62,6 +74,7 @@ class GalleryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('order')
             ->columns([
                 TextColumn::make('title')
                     ->searchable()
@@ -89,6 +102,13 @@ class GalleryResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            MediaRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
