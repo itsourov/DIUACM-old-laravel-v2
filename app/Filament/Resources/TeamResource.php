@@ -155,4 +155,9 @@ class TeamResource extends Resource
     {
         return static::getModel()::count();
     }
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
 }

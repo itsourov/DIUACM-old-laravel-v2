@@ -170,6 +170,15 @@ class GalleryResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['title', 'slug', 'description'];
