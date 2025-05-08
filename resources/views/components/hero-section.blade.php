@@ -25,9 +25,12 @@
                 <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">Join DIU
                     ACM to excel in competitive programming through structured learning paths, regular contests,
                     and expert mentorship. Home of ICPC aspirants at Daffodil International University.</p>
-                <div class="flex flex-wrap gap-4 mb-8"><a data-slot="button"
-                                                          class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-primary/90 h-10 has-[&gt;svg]:px-4 rounded-full px-8 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md hover:shadow-xl transition-all dark:from-blue-500 dark:to-cyan-500 dark:hover:from-blue-600 dark:hover:to-cyan-600 min-w-[200px] font-medium"
-                                                          href="/events">
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <x-button 
+                        variant="primary" 
+                        href="/events" 
+                        size="md"
+                        class="min-w-[200px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round"
@@ -39,9 +42,14 @@
                             <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
                             <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
                         </svg>
-                        Join Contests</a><a data-slot="button"
-                                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 has-[&gt;svg]:px-4 rounded-full px-8 bg-white/80 hover:bg-white text-blue-600 hover:text-blue-700 border border-slate-200 hover:border-blue-200 shadow-md hover:shadow-xl transition-all dark:bg-slate-800/80 dark:hover:bg-slate-800 dark:text-blue-400 dark:hover:text-blue-300 dark:border-slate-700 dark:hover:border-slate-600 min-w-[200px] font-medium backdrop-blur-sm"
-                                            href="/about">
+                        Join Contests
+                    </x-button>
+                    
+                    <x-button 
+                        variant="secondary" 
+                        href="/about" 
+                        size="md"
+                        class="min-w-[200px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round"
@@ -49,7 +57,9 @@
                             <path d="M5 12h14"></path>
                             <path d="m12 5 7 7-7 7"></path>
                         </svg>
-                        Learn More</a></div>
+                        Learn More
+                    </x-button>
+                </div>
             </div>
             <div class="hidden md:block flex-1 min-w-0 relative group">
                 <div

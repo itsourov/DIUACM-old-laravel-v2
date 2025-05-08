@@ -10,11 +10,12 @@
                 </div>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
+                @foreach($steps as $step)
                 <div
                     class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 relative">
                     <div
                         class="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-blue-600 dark:bg-blue-700 text-white flex items-center justify-center font-semibold text-sm">
-                        1
+                        {{ $step['number'] }}
                     </div>
                     <div class="text-center mb-4">
                         <div
@@ -22,70 +23,30 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round"
-                                 class="lucide lucide-book-open h-8 w-8 text-blue-600 dark:text-blue-400"
+                                 class="lucide lucide-{{ $step['icon'] }} h-8 w-8 text-blue-600 dark:text-blue-400"
                                  aria-hidden="true">
+                                @if($step['icon'] == 'book-open')
                                 <path d="M12 7v14"></path>
                                 <path
                                     d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z">
                                 </path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Master the Green Sheet</h3>
-                        <p class="text-slate-600 dark:text-slate-300 mt-2">Complete our curated set of
-                            beginner-level problems. Aim for 60% completion to become eligible for the Blue Sheet.
-                        </p>
-                    </div>
-                </div>
-                <div
-                    class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 relative">
-                    <div
-                        class="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-blue-600 dark:bg-blue-700 text-white flex items-center justify-center font-semibold text-sm">
-                        2
-                    </div>
-                    <div class="text-center mb-4">
-                        <div
-                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-code-xml h-8 w-8 text-blue-600 dark:text-blue-400"
-                                 aria-hidden="true">
+                                @elseif($step['icon'] == 'code-xml')
                                 <path d="m18 16 4-4-4-4"></path>
                                 <path d="m6 8-4 4 4 4"></path>
                                 <path d="m14.5 4-5 16"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Join Regular Contests</h3>
-                        <p class="text-slate-600 dark:text-slate-300 mt-2">Participate in our weekly onsite DIU
-                            Individual Contest every Friday and track your progress through our Individual Contest
-                            Tracker.</p>
-                    </div>
-                </div>
-                <div
-                    class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 relative">
-                    <div
-                        class="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-blue-600 dark:bg-blue-700 text-white flex items-center justify-center font-semibold text-sm">
-                        3
-                    </div>
-                    <div class="text-center mb-4">
-                        <div
-                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-users h-8 w-8 text-blue-600 dark:text-blue-400"
-                                 aria-hidden="true">
+                                @elseif($step['icon'] == 'users')
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="9" cy="7" r="4"></circle>
                                 <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                @endif
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Visit ACM Lab</h3>
-                        <p class="text-slate-600 dark:text-slate-300 mt-2">Come to KT-310 to meet the community and
-                            get help with your competitive programming journey.</p>
+                        <h3 class="text-xl font-semibold text-slate-900 dark:text-white">{{ $step['title'] }}</h3>
+                        <p class="text-slate-600 dark:text-slate-300 mt-2">{{ $step['description'] }}</p>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
     </section>
