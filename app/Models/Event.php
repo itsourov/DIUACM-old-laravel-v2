@@ -6,6 +6,7 @@ use App\Enums\EventType;
 use App\Enums\ParticipationScope;
 use App\Enums\Visibility;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Event extends Model
 {
@@ -22,6 +23,17 @@ class Event extends Model
         'type',
         'participation_scope',
     ];
+
+    public function rankLists(): BelongsToMany
+    {
+        return $this->belongsToMany(RankList::class, 'event_rank_list', 'event_id', 'rank_list_id')
+            ->wherePivot('weight');
+    }
+
+    public function attendedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'event_user_attendance', 'event_id', 'user_id')->withTimestamps();
+    }
 
     protected function casts(): array
     {

@@ -47,6 +47,21 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'team_user', 'user_id', 'team_id');
+    }
+
+    public function rankLists(): BelongsToMany
+    {
+        return $this->belongsToMany(RankList::class, 'rank_list_user', 'user_id', 'rank_list_id');
+    }
+
+    public function attendedEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_user_attendance', 'user_id', 'event_id')->withTimestamps();
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -61,8 +76,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class);
-    }
 }

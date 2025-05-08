@@ -125,12 +125,7 @@ class TrackerResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()
-                    ->sortable()
-                    ->color(fn(Visibility $state): string => match ($state) {
-                        Visibility::PUBLISHED => 'success',
-                        Visibility::DRAFT => 'warning',
-                        default => 'gray',
-                    }),
+                    ->sortable(),
 
                 TextColumn::make('order')
                     ->sortable()
