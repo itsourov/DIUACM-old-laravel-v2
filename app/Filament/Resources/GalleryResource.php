@@ -38,12 +38,14 @@ class GalleryResource extends Resource
         return $form
             ->schema([
                 Section::make('Gallery Information')
+                    ->description('Enter the basic details of the gallery')
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('title')
                                     ->required()
                                     ->maxLength(255)
+                                    ->placeholder('Gallery title')
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (string $operation, $state, callable $set) {
                                         if ($operation === 'create') {
@@ -54,10 +56,12 @@ class GalleryResource extends Resource
                                 TextInput::make('slug')
                                     ->required()
                                     ->maxLength(255)
+                                    ->helperText('URL-friendly name (auto-generated)')
                                     ->unique(Gallery::class, 'slug', fn($record) => $record),
 
                                 Textarea::make('description')
                                     ->rows(3)
+                                    ->placeholder('Brief description of this gallery')
                                     ->columnSpanFull(),
 
                                 ToggleButtons::make('status')
@@ -65,16 +69,19 @@ class GalleryResource extends Resource
                                     ->enum(Visibility::class)
                                     ->inline()
                                     ->default(Visibility::DRAFT)
+                                    ->helperText('Only published galleries will be visible to users')
                                     ->required(),
 
                                 TextInput::make('order')
                                     ->numeric()
                                     ->default(0)
+                                    ->helperText('Lower numbers appear first')
                                     ->required(),
                             ]),
                     ]),
 
                 Section::make('Images')
+                    ->description('Upload and manage the images in this gallery')
                     ->schema([
                         SpatieMediaLibraryFileUpload::make('images')
                             ->image()
@@ -85,19 +92,24 @@ class GalleryResource extends Resource
                             ->previewable()
                             ->downloadable()
                             ->maxFiles(50)
-                            ->helperText('Upload up to 20 images. Images will be optimized automatically.')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                            ->helperText('Upload up to 50 images. Images will be optimized automatically.')
                             ->columnSpanFull(),
                     ]),
 
                 Section::make('Metadata')
+                    ->description('System information about this gallery')
                     ->schema([
-                        Placeholder::make('created_at')
-                            ->label('Created Date')
-                            ->content(fn(?Gallery $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                        Grid::make(2)
+                            ->schema([
+                                Placeholder::make('created_at')
+                                    ->label('Created Date')
+                                    ->content(fn(?Gallery $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-                        Placeholder::make('updated_at')
-                            ->label('Last Modified Date')
-                            ->content(fn(?Gallery $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                                Placeholder::make('updated_at')
+                                    ->label('Last Modified Date')
+                                    ->content(fn(?Gallery $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                            ]),
                     ])
                     ->collapsed(),
             ]);

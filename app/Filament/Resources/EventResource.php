@@ -24,30 +24,35 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
-
     protected static ?string $slug = 'events';
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = 'Events';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make('Basic Information')
+                    ->description('Enter the primary details about this event')
                     ->schema([
                         TextInput::make('title')
                             ->required()
+                            ->maxLength(255)
+                            ->placeholder('Event title')
+                            ->autofocus()
                             ->columnSpan('full'),
-                        Placeholder::make('created_at')
-                            ->label('Created Date')
-                            ->content(now()),
 
                         RichEditor::make('description')
                             ->toolbarButtons([
@@ -61,10 +66,12 @@ class EventResource extends Resource
                                 'blockquote',
                                 'codeBlock',
                             ])
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDirectory('event-images')
                             ->placeholder('Enter event description')
                             ->columnSpan('full'),
 
-                        Grid::make()
+                        Grid::make(2)
                             ->schema([
                                 ToggleButtons::make('type')
                                     ->enum(EventType::class)
@@ -77,72 +84,89 @@ class EventResource extends Resource
                                     ->enum(Visibility::class)
                                     ->options(Visibility::class)
                                     ->default(Visibility::DRAFT)
+                                    ->helperText('Only published events are visible to users')
                                     ->inline()
                                     ->required(),
                             ]),
                     ]),
 
                 Section::make('Event Schedule')
+                    ->description('Set the timing for this event')
                     ->schema([
-                        Grid::make()
+                        Grid::make(2)
                             ->schema([
                                 DateTimePicker::make('starting_at')
                                     ->seconds(false)
                                     ->timezone('Asia/Dhaka')
                                     ->label('Starting Date')
-                                    ->required(),
+                                    ->required()
+                                    ->native(false)
+                                    ->displayFormat('M d, Y - h:i A'),
 
                                 DateTimePicker::make('ending_at')
                                     ->seconds(false)
                                     ->label('Ending Date')
                                     ->timezone('Asia/Dhaka')
                                     ->after('starting_at')
-                                    ->required(),
+                                    ->required()
+                                    ->native(false)
+                                    ->displayFormat('M d, Y - h:i A'),
+                                
                                 Placeholder::make('duration')
-                                    ->live()
+                                    ->label('Event Duration')
                                     ->content(fn($get) => calculateRuntime($get('starting_at'), $get('ending_at')))
                                     ->columnSpan('full'),
                             ]),
                     ]),
 
                 Section::make('Event Access')
+                    ->description('Configure how participants can access this event')
                     ->schema([
-                        Grid::make()
+                        Grid::make(2)
                             ->schema([
                                 TextInput::make('event_link')
                                     ->unique(ignoreRecord: true)
                                     ->url()
+                                    ->placeholder('Event URL')
+                                    ->helperText('The link where participants can access the event')
                                     ->columnSpan(1),
 
                                 TextInput::make('event_password')
-                                    ->string()
+                                    ->password()
+                                    ->revealable()
+                                    ->placeholder('Access password (optional)')
+                                    ->helperText('Optional password for event access')
                                     ->columnSpan(1),
                             ]),
 
-                        Grid::make()
+                        Grid::make(2)
                             ->schema([
                                 ToggleButtons::make('participation_scope')
-                                    ->columnSpanFull()
+                                    ->columnSpan('full')
                                     ->enum(ParticipationScope::class)
                                     ->options(ParticipationScope::class)
                                     ->default(ParticipationScope::OPEN_FOR_ALL)
+                                    ->helperText('Who can participate in this event')
                                     ->inline()
                                     ->required(),
 
                                 Checkbox::make('open_for_attendance')
                                     ->label('Open for Attendance')
-                                    ->helperText('Check this if the event is ready for attendees'),
+                                    ->helperText('Check this if the event is ready for attendees to register')
+                                    ->default(false)
+                                    ->columnSpan(1),
 
                                 Checkbox::make('strict_attendance')
                                     ->label('Strict Attendance')
-                                    ->helperText('If enabled then the users who didn\'t gave attendance their solve count wont be counted.'),
+                                    ->helperText('If enabled, users who didn\'t give attendance won\'t have their solve counts counted')
+                                    ->default(false)
+                                    ->columnSpan(1),
                             ]),
                     ]),
 
-
                 Section::make('Event History')
                     ->schema([
-                        Grid::make()
+                        Grid::make(2)
                             ->schema([
                                 Placeholder::make('created_at')
                                     ->label('Created Date')
@@ -163,40 +187,73 @@ class EventResource extends Resource
             ->columns([
                 TextColumn::make('title')
                     ->searchable()
+                    ->sortable()
+                    ->limit(30)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+                        if (strlen($state) <= 30) {
+                            return null;
+                        }
+                        return $state;
+                    }),
+
+                TextColumn::make('type')
+                    ->badge()
+                    ->color('primary')
                     ->sortable(),
 
-                TextColumn::make('description')
-                    ->toggleable()->toggledHiddenByDefault(),
-
-                TextColumn::make('status'),
+                TextColumn::make('status')
+                    ->badge()
+            
+                    ->sortable(),
 
                 TextColumn::make('starting_at')
-                    ->sortable(true)
+                    ->sortable()
                     ->timezone('Asia/Dhaka')
                     ->dateTime('M d, Y - h:i A')
                     ->label('Starting Date'),
 
                 TextColumn::make('ending_at')
-                    ->label('Ending Date')
-                    ->toggleable()->toggledHiddenByDefault()
-                    ->date(),
+                    ->timezone('Asia/Dhaka')
+                    ->dateTime('M d, Y - h:i A')
+                    ->label('Ending Date')     
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('participation_scope')
+                    ->badge()
+    
+                    ->sortable(),
+
+                ToggleColumn::make('open_for_attendance')
+                    ->label('Open')
+                    ->sortable(),
+
+                ToggleColumn::make('strict_attendance')
+                    ->label('Strict')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('event_link')
-                    ->searchable()
-                    ->toggleable()->toggledHiddenByDefault(),
-                ToggleColumn::make('open_for_attendance')
-                    ->sortable(),
-                ToggleColumn::make('strict_attendance')
-                    ->sortable(),
-
-                TextColumn::make('type'),
-
-                TextColumn::make('attendance_scope'),
+                    ->label('Link')
+                    ->url(fn($record) => $record->event_link ? 'https://' . $record->event_link : null)
+                    ->openUrlInNewTab()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('type')
+                    ->options(EventType::class)
+                    ->label('Event Type'),
+                    
+                SelectFilter::make('status')
+                    ->options(Visibility::class)
+                    ->multiple(),
+
+                SelectFilter::make('participation_scope')
+                    ->options(ParticipationScope::class)
+                    ->label('Participation'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -204,7 +261,18 @@ class EventResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateIcon('heroicon-o-calendar')
+            ->emptyStateHeading('No events yet')
+            ->emptyStateDescription('Once you create events, they will appear here.')
+            ->emptyStateActions([
+                \Filament\Tables\Actions\CreateAction::make()
+                    ->label('Create event')
+                    ->icon('heroicon-o-plus'),
+            ])
+            ->striped()
+            ->poll('60s')
+            ->paginated([10, 25, 50, 100]);
     }
 
     public static function getPages(): array
@@ -218,10 +286,18 @@ class EventResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title'];
+        return ['title', 'description'];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
 }
 
 function calculateRuntime($start, $end): ?string
@@ -233,10 +309,15 @@ function calculateRuntime($start, $end): ?string
     $start = Carbon::parse($start);
     $end = Carbon::parse($end);
 
-    $diff = $start->diff($end);
-
     try {
-        return $diff->forHumans();
+        $diff = $start->diff($end);
+        
+        $parts = [];
+        if ($diff->d > 0) $parts[] = $diff->d . ' ' . ($diff->d > 1 ? 'days' : 'day');
+        if ($diff->h > 0) $parts[] = $diff->h . ' ' . ($diff->h > 1 ? 'hours' : 'hour');
+        if ($diff->i > 0) $parts[] = $diff->i . ' ' . ($diff->i > 1 ? 'minutes' : 'minute');
+        
+        return !empty($parts) ? implode(', ', $parts) : 'Less than a minute';
     } catch (Exception $e) {
         return 'Calculation error: ' . $e->getMessage();
     }

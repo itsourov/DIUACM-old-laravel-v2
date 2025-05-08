@@ -41,20 +41,22 @@ class ContestResource extends Resource
         return $form
             ->schema([
                 Section::make('Contest Details')
+                    ->description('Enter the basic information about the contest')
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('name')
-
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->placeholder('Enter contest name'),
 
                                 Select::make('gallery_id')
                                     ->relationship('gallery', 'title', modifyQueryUsing: function (Builder $query) {
                                         $query->where('status', Visibility::PUBLISHED);
                                     })
                                     ->preload()
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->placeholder('Select a gallery'),
 
                                 ToggleButtons::make('contest_type')
                                     ->options(ContestType::class)
@@ -63,33 +65,40 @@ class ContestResource extends Resource
                                     ->required(),
 
                                 TextInput::make('location')
-                                    ->maxLength(50),
+                                    ->maxLength(50)
+                                    ->placeholder('Contest location'),
 
                                 DatePicker::make('date')
-                                    ->native(false),
+                                    ->native(false)
+                                    ->displayFormat('M d, Y'),
                             ]),
 
                         Grid::make(1)
                             ->schema([
                                 TextInput::make('description')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->placeholder('Brief description of the contest'),
 
                                 TextInput::make('standings_url')
                                     ->url()
                                     ->prefix('https://')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->placeholder('Link to contest standings (optional)'),
                             ]),
                     ]),
 
                 Section::make('Metadata')
                     ->schema([
-                        Placeholder::make('created_at')
-                            ->label('Created Date')
-                            ->content(fn(?Contest $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                        Grid::make(2)
+                            ->schema([
+                                Placeholder::make('created_at')
+                                    ->label('Created Date')
+                                    ->content(fn(?Contest $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-                        Placeholder::make('updated_at')
-                            ->label('Last Modified Date')
-                            ->content(fn(?Contest $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                                Placeholder::make('updated_at')
+                                    ->label('Last Modified Date')
+                                    ->content(fn(?Contest $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                            ]),
                     ])
                     ->collapsed(),
             ]);
@@ -98,32 +107,37 @@ class ContestResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('date', 'desc')
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->weight('medium'),
 
                 TextColumn::make('contest_type')
-                    ->colors([
-                        'primary' => fn($state) => true,
-                    ])
                     ->badge()
+                    ->color('primary')
                     ->sortable(),
 
                 TextColumn::make('gallery.title')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->url(fn ($record) => $record->gallery ? url("/admin/galleries/{$record->gallery->id}") : null)
+                    ->openUrlInNewTab(),
 
                 TextColumn::make('location')
                     ->searchable(),
 
                 TextColumn::make('date')
-                    ->date()
+                    ->date('M d, Y')
                     ->sortable(),
 
                 TextColumn::make('teams_count')
                     ->counts('teams')
-                    ->label('Teams'),
+                    ->label('Teams')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -134,7 +148,9 @@ class ContestResource extends Resource
                 SelectFilter::make('contest_type')
                     ->options(ContestType::class),
                 SelectFilter::make('gallery')
-                    ->relationship('gallery', 'title'),
+                    ->relationship('gallery', 'title')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 EditAction::make(),
@@ -144,7 +160,9 @@ class ContestResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->striped()
+            ->paginated([10, 25, 50, 100]);
     }
 
     public static function getPages(): array

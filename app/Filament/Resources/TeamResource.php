@@ -38,12 +38,14 @@ class TeamResource extends Resource
         return $form
             ->schema([
                 Section::make('Team Information')
+                    ->description('Enter details about the team and its members')
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('name')
                                     ->required()
                                     ->maxLength(255)
+                                    ->placeholder('Team name')
                                     ->unique(
                                         ignoreRecord: true,
                                         modifyRuleUsing: fn(Unique $rule, callable $get) => $rule->where('contest_id', $get('contest_id'))
@@ -55,7 +57,8 @@ class TeamResource extends Resource
                                     ->hiddenOn(TeamsRelationManager::class)
                                     ->searchable()
                                     ->preload()
-                                    ->required(),
+                                    ->required()
+                                    ->placeholder('Select contest'),
                             ]),
 
                         Grid::make(2)
@@ -64,31 +67,39 @@ class TeamResource extends Resource
                                     ->integer()
                                     ->minValue(1)
                                     ->label('Team Rank')
+                                    ->placeholder('Final position')
                                     ->helperText('Position in the contest ranking'),
 
                                 TextInput::make('solveCount')
                                     ->integer()
                                     ->minValue(0)
                                     ->label('Problems Solved')
+                                    ->placeholder('Number of problems')
                                     ->helperText('Number of problems solved during the contest'),
                             ]),
+                        
                         Select::make('members')
                             ->relationship('members', 'name')
                             ->getOptionLabelFromRecordUsing(fn(User $record) => "{$record->name} ({$record->student_id})")
                             ->searchable(['name', 'email', 'student_id', 'username', 'codeforces_handle'])
                             ->preload()
-                            ->multiple(),
+                            ->multiple()
+                            ->placeholder('Select team members')
+                            ->helperText('Select all participating members of this team'),
                     ]),
 
                 Section::make('Metadata')
                     ->schema([
-                        Placeholder::make('created_at')
-                            ->label('Created Date')
-                            ->content(fn(?Team $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                        Grid::make(2)
+                            ->schema([
+                                Placeholder::make('created_at')
+                                    ->label('Created Date')
+                                    ->content(fn(?Team $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-                        Placeholder::make('updated_at')
-                            ->label('Last Modified Date')
-                            ->content(fn(?Team $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                                Placeholder::make('updated_at')
+                                    ->label('Last Modified Date')
+                                    ->content(fn(?Team $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                            ]),
                     ])
                     ->collapsed(),
             ]);
@@ -97,26 +108,44 @@ class TeamResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('rank', 'asc')
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->weight('medium'),
 
                 TextColumn::make('contest.name')
                     ->hiddenOn(TeamsRelationManager::class)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->color('primary'),
 
                 TextColumn::make('rank')
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('success')
+                    ->alignCenter(),
 
                 TextColumn::make('solveCount')
                     ->sortable()
-                    ->label('Problems Solved'),
+                    ->label('Problems Solved')
+                    ->alignCenter(),
 
                 TextColumn::make('members_count')
                     ->counts('members')
-                    ->label('Team Size'),
+                    ->label('Team Size')
+                    ->sortable()
+                    ->badge()
+                    ->color('gray')
+                    ->alignCenter(),
+
+                TextColumn::make('members.name')
+                    ->listWithLineBreaks()
+                    ->limitList(2)
+                    ->expandableLimitedList()
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -137,7 +166,9 @@ class TeamResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->striped()
+            ->paginated([10, 25, 50, 100]);
     }
 
     public static function getPages(): array
