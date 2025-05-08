@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ContestResource\Pages;
 
 use App\Filament\Resources\ContestResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListContests extends ListRecords
@@ -13,7 +13,7 @@ class ListContests extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\TrackerResource\Pages;
 
 use App\Filament\Resources\TrackerResource;
-use Filament\Actions\DeleteAction;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTracker extends EditRecord
@@ -13,7 +13,7 @@ class EditTracker extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

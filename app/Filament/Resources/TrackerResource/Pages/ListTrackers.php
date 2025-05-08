@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\TrackerResource\Pages;
 
 use App\Filament\Resources\TrackerResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTrackers extends ListRecords
@@ -13,7 +13,7 @@ class ListTrackers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

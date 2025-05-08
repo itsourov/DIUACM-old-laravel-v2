@@ -3,27 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserSolveStatOnEventResource\Pages;
+use App\Filament\Resources\UserSolveStatOnEventResource\RelationManagers;
 use App\Models\UserSolveStatOnEvent;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserSolveStatOnEventResource extends Resource
 {
     protected static ?string $model = UserSolveStatOnEvent::class;
-
-    protected static ?string $slug = 'user-solve-stat-on-events';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -31,33 +23,20 @@ class UserSolveStatOnEventResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('user_id')
+                Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
-                    ->searchable()
                     ->required(),
-
-                Select::make('event_id')
+                Forms\Components\Select::make('event_id')
                     ->relationship('event', 'title')
-                    ->searchable()
                     ->required(),
-
-                TextInput::make('solve_count')
+                Forms\Components\TextInput::make('solve_count')
                     ->required()
-                    ->integer(),
-
-                TextInput::make('upsolve_count')
+                    ->numeric(),
+                Forms\Components\TextInput::make('upsolve_count')
                     ->required()
-                    ->integer(),
-
-                Checkbox::make('participation'),
-
-                Placeholder::make('created_at')
-                    ->label('Created Date')
-                    ->content(fn(?UserSolveStatOnEvent $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                Placeholder::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->content(fn(?UserSolveStatOnEvent $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->numeric(),
+                Forms\Components\Toggle::make('participation')
+                    ->required(),
             ]);
     }
 
@@ -65,32 +44,47 @@ class UserSolveStatOnEventResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('user.name')
+                    ->numeric()
                     ->sortable(),
-
-                TextColumn::make('event.title')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('event.title')
+                    ->numeric()
                     ->sortable(),
-
-                TextColumn::make('solve_count'),
-
-                TextColumn::make('upsolve_count'),
-
-                TextColumn::make('participation'),
+                Tables\Columns\TextColumn::make('solve_count')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('upsolve_count')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('participation')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
@@ -100,30 +94,5 @@ class UserSolveStatOnEventResource extends Resource
             'create' => Pages\CreateUserSolveStatOnEvent::route('/create'),
             'edit' => Pages\EditUserSolveStatOnEvent::route('/{record}/edit'),
         ];
-    }
-
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
-        return parent::getGlobalSearchEloquentQuery()->with(['user', 'event']);
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['user.name', 'event.title'];
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        $details = [];
-
-        if ($record->user) {
-            $details['User'] = $record->user->name;
-        }
-
-        if ($record->event) {
-            $details['Event'] = $record->event->title;
-        }
-
-        return $details;
     }
 }

@@ -2,167 +2,88 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\ContestType;
-use App\Enums\Visibility;
 use App\Filament\Resources\ContestResource\Pages;
-use App\Filament\Resources\ContestResource\RelationManagers\TeamsRelationManager;
+use App\Filament\Resources\ContestResource\RelationManagers;
 use App\Models\Contest;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContestResource extends Resource
 {
     protected static ?string $model = Contest::class;
-    protected static ?string $slug = 'contests';
-    protected static ?string $navigationIcon = 'heroicon-o-trophy';
-    protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationLabel = 'Contests';
-    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Contest Details')
-                    ->description('Enter the basic information about the contest')
-                    ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('name')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->placeholder('Enter contest name'),
-
-                                Select::make('gallery_id')
-                                    ->relationship('gallery', 'title', modifyQueryUsing: function (Builder $query) {
-                                        $query->where('status', Visibility::PUBLISHED);
-                                    })
-                                    ->preload()
-                                    ->searchable()
-                                    ->placeholder('Select a gallery'),
-
-                                ToggleButtons::make('contest_type')
-                                    ->options(ContestType::class)
-                                    ->enum(ContestType::class)
-                                    ->inline()
-                                    ->required(),
-
-                                TextInput::make('location')
-                                    ->maxLength(50)
-                                    ->placeholder('Contest location'),
-
-                                DatePicker::make('date')
-                                    ->native(false)
-                                    ->displayFormat('M d, Y'),
-                            ]),
-
-                        Grid::make(1)
-                            ->schema([
-                                TextInput::make('description')
-                                    ->maxLength(255)
-                                    ->placeholder('Brief description of the contest'),
-
-                                TextInput::make('standings_url')
-                                    ->url()
-                                    ->prefix('https://')
-                                    ->maxLength(255)
-                                    ->placeholder('Link to contest standings (optional)'),
-                            ]),
-                    ]),
-
-                Section::make('Metadata')
-                    ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                Placeholder::make('created_at')
-                                    ->label('Created Date')
-                                    ->content(fn(?Contest $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                                Placeholder::make('updated_at')
-                                    ->label('Last Modified Date')
-                                    ->content(fn(?Contest $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
-                            ]),
-                    ])
-                    ->collapsed(),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('gallery_id')
+                    ->relationship('gallery', 'title'),
+                Forms\Components\TextInput::make('contest_type')
+                    ->required(),
+                Forms\Components\TextInput::make('location')
+                    ->maxLength(255),
+                Forms\Components\DateTimePicker::make('date'),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('standings_url')
+                    ->maxLength(255),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('date', 'desc')
             ->columns([
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable()
-                    ->weight('medium'),
-
-                TextColumn::make('contest_type')
-                    ->badge()
-                    ->color('primary')
-                    ->sortable(),
-
-                TextColumn::make('gallery.title')
-                    ->searchable()
-                    ->sortable()
-                    ->url(fn ($record) => $record->gallery ? url("/admin/galleries/{$record->gallery->id}") : null)
-                    ->openUrlInNewTab(),
-
-                TextColumn::make('location')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-
-                TextColumn::make('date')
-                    ->date('M d, Y')
+                Tables\Columns\TextColumn::make('gallery.title')
+                    ->numeric()
                     ->sortable(),
-
-                TextColumn::make('teams_count')
-                    ->counts('teams')
-                    ->label('Teams')
+                Tables\Columns\TextColumn::make('contest_type'),
+                Tables\Columns\TextColumn::make('location')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('standings_url')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
                     ->sortable()
-                    ->badge()
-                    ->color('gray'),
-
-                TextColumn::make('created_at')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('contest_type')
-                    ->options(ContestType::class),
-                SelectFilter::make('gallery')
-                    ->relationship('gallery', 'title')
-                    ->searchable()
-                    ->preload(),
+                //
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->striped()
-            ->paginated([10, 25, 50, 100]);
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
@@ -172,46 +93,5 @@ class ContestResource extends Resource
             'create' => Pages\CreateContest::route('/create'),
             'edit' => Pages\EditContest::route('/{record}/edit'),
         ];
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            TeamsRelationManager::class,
-        ];
-    }
-
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
-        return parent::getGlobalSearchEloquentQuery()->with(['gallery']);
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['name', 'gallery.title', 'location'];
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        $details = [];
-
-        if ($record->gallery) {
-            $details['Gallery'] = $record->gallery->title;
-        }
-
-        if ($record->location) {
-            $details['Location'] = $record->location;
-        }
-
-        return $details;
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
     }
 }

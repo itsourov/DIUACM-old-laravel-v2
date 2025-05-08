@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ContestResource\Pages;
 
 use App\Filament\Resources\ContestResource;
-use Filament\Actions\DeleteAction;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditContest extends EditRecord
@@ -13,7 +13,7 @@ class EditContest extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

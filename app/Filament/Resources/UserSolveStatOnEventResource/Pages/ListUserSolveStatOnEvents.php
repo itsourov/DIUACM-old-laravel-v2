@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserSolveStatOnEventResource\Pages;
 
 use App\Filament\Resources\UserSolveStatOnEventResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUserSolveStatOnEvents extends ListRecords
@@ -13,7 +13,7 @@ class ListUserSolveStatOnEvents extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

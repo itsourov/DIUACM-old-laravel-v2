@@ -2,167 +2,73 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Visibility;
 use App\Filament\Resources\GalleryResource\Pages;
-use App\Filament\Resources\GalleryResource\RelationManagers\MediaRelationManager;
+use App\Filament\Resources\GalleryResource\RelationManagers;
 use App\Models\Gallery;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class GalleryResource extends Resource
 {
     protected static ?string $model = Gallery::class;
-    protected static ?string $slug = 'galleries';
-    protected static ?string $navigationIcon = 'heroicon-o-photo';
-    protected static ?string $recordTitleAttribute = 'title';
-    protected static ?int $navigationSort = 3;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Gallery Information')
-                    ->description('Enter the basic details of the gallery')
-                    ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('title')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->placeholder('Gallery title')
-                                    ->live(onBlur: true)
-                                    ->afterStateUpdated(function (string $operation, $state, callable $set) {
-                                        if ($operation === 'create') {
-                                            $set('slug', Str::slug($state));
-                                        }
-                                    }),
-
-                                TextInput::make('slug')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->helperText('URL-friendly name (auto-generated)')
-                                    ->unique(Gallery::class, 'slug', fn($record) => $record),
-
-                                Textarea::make('description')
-                                    ->rows(3)
-                                    ->placeholder('Brief description of this gallery')
-                                    ->columnSpanFull(),
-
-                                ToggleButtons::make('status')
-                                    ->options(Visibility::class)
-                                    ->enum(Visibility::class)
-                                    ->inline()
-                                    ->default(Visibility::DRAFT)
-                                    ->helperText('Only published galleries will be visible to users')
-                                    ->required(),
-
-                                TextInput::make('order')
-                                    ->numeric()
-                                    ->default(0)
-                                    ->helperText('Lower numbers appear first')
-                                    ->required(),
-                            ]),
-                    ]),
-
-                Section::make('Images')
-                    ->description('Upload and manage the images in this gallery')
-                    ->schema([
-                        SpatieMediaLibraryFileUpload::make('images')
-                            ->image()
-                            ->multiple()
-                            ->collection('gallery')
-                            ->reorderable()
-                            ->imageEditor()
-                            ->previewable()
-                            ->downloadable()
-                            ->maxFiles(50)
-                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
-                            ->helperText('Upload up to 50 images. Images will be optimized automatically.')
-                            ->columnSpanFull(),
-                    ]),
-
-                Section::make('Metadata')
-                    ->description('System information about this gallery')
-                    ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                Placeholder::make('created_at')
-                                    ->label('Created Date')
-                                    ->content(fn(?Gallery $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                                Placeholder::make('updated_at')
-                                    ->label('Last Modified Date')
-                                    ->content(fn(?Gallery $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
-                            ]),
-                    ])
-                    ->collapsed(),
+                Forms\Components\TextInput::make('title')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('status')
+                    ->required(),
+                Forms\Components\TextInput::make('order')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('order')
             ->columns([
-                TextColumn::make('title')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('order')
+                    ->numeric()
                     ->sortable(),
-
-                TextColumn::make('slug')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('description')
-                    ->limit(30)
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-                        if (strlen($state) <= 30) {
-                            return null;
-                        }
-                        return $state;
-                    }),
-
-                BadgeColumn::make('status')
-                    ->colors([
-                        'danger' => Visibility::DRAFT->value,
-                        'success' => Visibility::PUBLISHED->value,
-                    ]),
-
-                TextColumn::make('order')
-                    ->sortable(),
-
-                TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(Visibility::class),
+                //
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -170,7 +76,7 @@ class GalleryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            MediaRelationManager::class,
+            //
         ];
     }
 
@@ -181,19 +87,5 @@ class GalleryResource extends Resource
             'create' => Pages\CreateGallery::route('/create'),
             'edit' => Pages\EditGallery::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['title', 'slug', 'description'];
     }
 }

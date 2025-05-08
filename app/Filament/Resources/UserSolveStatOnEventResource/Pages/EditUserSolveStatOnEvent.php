@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserSolveStatOnEventResource\Pages;
 
 use App\Filament\Resources\UserSolveStatOnEventResource;
-use Filament\Actions\DeleteAction;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditUserSolveStatOnEvent extends EditRecord
@@ -13,7 +13,7 @@ class EditUserSolveStatOnEvent extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }
