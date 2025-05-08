@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\Visibility;
+use App\Models\Tracker;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,19 +8,22 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('galleries', function (Blueprint $table) {
+        Schema::create('rank_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('slug')->unique();
+            $table->foreignIdFor(Tracker::class)->constrained('trackers');
+            $table->string('keyword');
             $table->text('description')->nullable();
-            $table->enum('status',Visibility::toArray())->default(Visibility::DRAFT);
+            $table->float('weight_of_upsolve');
             $table->integer('order');
+            $table->boolean('is_archived');
             $table->timestamps();
+
+            $table->unique(['keyword', 'tracker_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('galleries');
+        Schema::dropIfExists('rank_lists');
     }
 };
