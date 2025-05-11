@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContestResource\RelationManagers\TeamsRelationManager;
 use App\Filament\Resources\TeamResource\Pages;
-use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -29,6 +28,8 @@ class TeamResource extends Resource
 
 
     protected static ?string $model = Team::class;
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {

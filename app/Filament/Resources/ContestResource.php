@@ -179,11 +179,11 @@ class ContestResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
 
-                Action::make('view_teams')
-                    ->label('Teams')
-                    ->icon('heroicon-o-user-group')
-                    ->iconButton()
-                    ->url(fn(Contest $record): string => TeamResource::getUrl('index', ['contest_id' => $record->id])),
+//                Action::make('view_teams')
+//                    ->label('Teams')
+//                    ->icon('heroicon-o-user-group')
+//                    ->iconButton()
+//                    ->url(fn(Contest $record): string => TeamResource::getUrl('index', ['contest_id' => $record->id])),
 
                 Action::make('standings')
                     ->icon('heroicon-o-trophy')
