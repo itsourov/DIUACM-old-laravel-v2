@@ -12,33 +12,53 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rules\Unique;
 
 class RankListResource extends Resource
 {
     protected static ?string $model = RankList::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Site Management';
+    protected static ?int $navigationSort = 21;
+    protected static ?string $recordTitleAttribute = 'keyword';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('tracker_id')
-                    ->relationship('tracker', 'title')
-                    ->required(),
-                Forms\Components\TextInput::make('keyword')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('weight_of_upsolve')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('order')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Toggle::make('is_archived')
-                    ->required(),
+                Forms\Components\Section::make('Basic Information')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\Select::make('tracker_id')
+                            ->relationship('tracker', 'title')
+                            ->required(),
+                        Forms\Components\TextInput::make('keyword')
+                            ->required()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) use ($form) {
+                                return $rule->where('tracker_id', $get('tracker_id') ?? $get('owner_id'));
+                            }),
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('weight_of_upsolve')
+                            ->default(0.25)
+                            ->step(0.01)
+                            ->numeric()
+                            ->numeric()
+                            ->required(),
+                        Forms\Components\TextInput::make('order')
+                            ->default(0)
+                            ->required()
+                            ->numeric(),
+                        Forms\Components\Toggle::make('is_archived')
+                            ->required(),
+                    ])
             ]);
     }
 
@@ -95,5 +115,10 @@ class RankListResource extends Resource
             'create' => Pages\CreateRankList::route('/create'),
             'edit' => Pages\EditRankList::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['keyword', 'description'];
     }
 }
