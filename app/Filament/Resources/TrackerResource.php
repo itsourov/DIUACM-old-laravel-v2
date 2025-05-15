@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Visibility;
 use App\Filament\Resources\TrackerResource\Pages;
 use App\Filament\Resources\TrackerResource\RelationManagers;
+use App\Filament\Resources\TrackerResource\RelationManagers\RanklistsRelationManager;
 use App\Models\Tracker;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,7 +21,6 @@ class TrackerResource extends Resource
     protected static ?string $model = Tracker::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-    protected static ?string $navigationGroup = 'Site Management';
     protected static ?int $navigationSort = 20;
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -142,7 +142,7 @@ class TrackerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RanklistsRelationManager::class,
         ];
     }
 

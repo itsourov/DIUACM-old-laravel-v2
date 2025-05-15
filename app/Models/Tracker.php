@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Visibility;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tracker extends Model
 {
@@ -23,7 +24,7 @@ class Tracker extends Model
 
         ];
     }
-    public function rankLists(): \Illuminate\Database\Eloquent\Relations\HasMany|Tracker
+    public function rankLists(): HasMany|Tracker
     {
         return $this->hasMany(RankList::class);
     }

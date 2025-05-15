@@ -15,7 +15,8 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->float('weight_of_upsolve');
             $table->integer('order');
-            $table->boolean('is_archived');
+            $table->boolean('is_active')
+                ->default(true);
             $table->timestamps();
 
             $table->unique(['keyword', 'tracker_id']);

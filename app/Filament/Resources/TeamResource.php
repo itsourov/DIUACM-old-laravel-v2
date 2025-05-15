@@ -20,7 +20,7 @@ class TeamResource extends Resource
 {
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Competition Management';
+
 
     protected static ?int $navigationSort = 20;
 

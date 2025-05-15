@@ -25,7 +25,6 @@ class ContestResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
 
-    protected static ?string $navigationGroup = 'Competition Management';
     protected static ?int $navigationSort = 10;
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RankListResource\Pages;
 use App\Filament\Resources\RankListResource\RelationManagers;
+use App\Filament\Resources\TrackerResource\RelationManagers\RanklistsRelationManager;
 use App\Models\RankList;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,9 +20,10 @@ class RankListResource extends Resource
     protected static ?string $model = RankList::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Site Management';
+
     protected static ?int $navigationSort = 21;
     protected static ?string $recordTitleAttribute = 'keyword';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function getNavigationBadge(): ?string
     {
@@ -36,6 +38,7 @@ class RankListResource extends Resource
                     ->columns(2)
                     ->schema([
                         Forms\Components\Select::make('tracker_id')
+                            ->hiddenOn(RanklistsRelationManager::class)
                             ->relationship('tracker', 'title')
                             ->required(),
                         Forms\Components\TextInput::make('keyword')
@@ -56,7 +59,7 @@ class RankListResource extends Resource
                             ->default(0)
                             ->required()
                             ->numeric(),
-                        Forms\Components\Toggle::make('is_archived')
+                        Forms\Components\Toggle::make('is_active')
                             ->required(),
                     ])
             ]);
@@ -67,7 +70,7 @@ class RankListResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('tracker.title')
-                    ->numeric()
+                    ->hiddenOn(RanklistsRelationManager::class)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keyword')
                     ->searchable(),
@@ -77,7 +80,7 @@ class RankListResource extends Resource
                 Tables\Columns\TextColumn::make('order')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_archived')
+                Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

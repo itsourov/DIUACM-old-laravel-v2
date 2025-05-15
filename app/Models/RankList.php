@@ -14,7 +14,7 @@ class RankList extends Model
         'description',
         'weight_of_upsolve',
         'order',
-        'is_archived',
+        'is_active',
     ];
 
     public function tracker(): BelongsTo
@@ -36,7 +36,7 @@ class RankList extends Model
     protected function casts(): array
     {
         return [
-            'is_archived' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 }
