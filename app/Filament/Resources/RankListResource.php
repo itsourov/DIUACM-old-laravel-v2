@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RankListResource\Pages;
-use App\Filament\Resources\RankListResource\RelationManagers;
 use App\Filament\Resources\TrackerResource\RelationManagers\RanklistsRelationManager;
 use App\Models\RankList;
 use Filament\Forms;
