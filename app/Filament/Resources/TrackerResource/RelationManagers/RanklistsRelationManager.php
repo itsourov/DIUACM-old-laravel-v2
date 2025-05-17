@@ -37,7 +37,7 @@ class RanklistsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->url(route('filament.admin.resources.rank-lists.edit', $this->ownerRecord->id)),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

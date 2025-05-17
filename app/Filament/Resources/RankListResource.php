@@ -122,6 +122,6 @@ class RankListResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['keyword', 'description'];
+        return ['keyword', 'description', 'tracker.title'];
     }
 }
