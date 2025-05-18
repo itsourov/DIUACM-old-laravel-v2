@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\RanklistResouceResource\RelationManagers\EventsRelationManager;
 use App\Filament\Resources\RankListResource\Pages;
 use App\Filament\Resources\TrackerResource\RelationManagers\RanklistsRelationManager;
 use App\Models\RankList;
@@ -106,7 +107,7 @@ class RankListResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EventsRelationManager::class,
         ];
     }
 

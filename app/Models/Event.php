@@ -27,7 +27,7 @@ class Event extends Model
     public function rankLists(): BelongsToMany
     {
         return $this->belongsToMany(RankList::class, 'event_rank_list', 'event_id', 'rank_list_id')
-            ->wherePivot('weight');
+            ->withPivot('weight');
     }
 
     public function attendedUsers(): BelongsToMany
