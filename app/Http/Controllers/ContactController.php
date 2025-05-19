@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,8 @@ class ContactController extends Controller
 {
     public function show()
     {
+
+
         return view('pages.contact');
     }
 
@@ -24,6 +27,11 @@ class ContactController extends Controller
 
         $data = $validator->validated();
 
+        Notification::make()
+            ->title('Submission Received')
+            ->body('Thank you for your message. We will get back to you soon!')
+            ->success()
+            ->send();
 
         // Send email
         //TODO: Send email
