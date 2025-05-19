@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Visibility;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
@@ -11,7 +12,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class BlogPost extends Model implements HasMedia
 {
-
+    use HasFactory;
     use InteractsWithMedia;
 
     protected $fillable = [
