@@ -9,6 +9,8 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class BlogPost extends Model implements HasMedia
 {
@@ -40,5 +42,10 @@ class BlogPost extends Model implements HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
+    }
+
+    public function scopePublished(Builder $query)
+    {
+        return $query->where('status', Visibility::PUBLISHED)->latest('published_at');
     }
 }
