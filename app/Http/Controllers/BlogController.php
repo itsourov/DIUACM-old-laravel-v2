@@ -22,6 +22,12 @@ class BlogController extends Controller
             ->where('status', Visibility::PUBLISHED)
             ->firstOrFail();
             
-        return view('pages.blog.show', compact('blog'));
+        // Get related posts (excluding current post)
+        $relatedPosts = BlogPost::published()
+            ->where('id', '!=', $blog->id)
+            ->limit(3)
+            ->get();
+            
+        return view('pages.blog.show', compact('blog', 'relatedPosts'));
     }
 } 
