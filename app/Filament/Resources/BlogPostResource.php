@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Enums\Visibility;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -45,6 +47,7 @@ class BlogPostResource extends Resource
                 Section::make('Post Content')
                     ->schema([
                         TextInput::make('title')
+                            ->columnSpanFull()
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
@@ -52,6 +55,8 @@ class BlogPostResource extends Resource
                             ),
 
                         TextInput::make('slug')
+                            ->rules(['required', 'regex:/^[a-zA-Z0-9-]+$/'])
+                            ->helperText('Cannot contain spaces or special characters.')
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->maxLength(255),
@@ -60,9 +65,25 @@ class BlogPostResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        MarkdownEditor::make('content')
-                            ->required()
-                            ->columnSpanFull(),
+                        SpatieMediaLibraryFileUpload::make('Featured Image')
+
+                            ->collection('post-featured-images')
+                            ->disk('post-featured-images')
+                            ->helperText('This cover image is used in your blog post as a feature image. Recommended image size 1200 X 628')
+                            ->image()
+                            ->responsiveImages()
+                            ->previewable()
+                            ->preserveFilenames()
+                            ->imageEditor()
+                            ->maxSize(1024 * 5),
+
+                        TinyEditor::make('content')
+                            ->fileAttachmentsDisk('blog-images')
+                            ->fileAttachmentsVisibility('public')
+                            ->profile('full')
+                            ->showMenuBar()
+                            ->columnSpanFull()
+                            ->required(),
                     ])
                     ->columns(2),
 
