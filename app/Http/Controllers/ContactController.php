@@ -22,22 +22,12 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $data = $validator->validated();
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'message' => $request->message,
-        ];
 
         // Send email
         //TODO: Send email
 
         return redirect()->back()->with('success', 'Thank you for your message. We will get back to you soon!');
     }
-} 
+}
