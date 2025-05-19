@@ -60,6 +60,15 @@ return [
             'report' => false,
         ],
 
+        'post-featured-images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/post-featured-images'),
+            'url' => env('APP_URL').'/storage/post-featured-images',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

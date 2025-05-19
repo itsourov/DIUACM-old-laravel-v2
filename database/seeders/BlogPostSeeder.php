@@ -12,23 +12,30 @@ class BlogPostSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 5 featured and published blog posts
-        BlogPost::factory()
-            ->count(5)
-            ->featured()
-            ->published()
-            ->create();
+//        // Create 5 featured and published blog posts
+//        BlogPost::factory()
+//            ->count(5)
+//            ->featured()
+//            ->published()
+//            ->create();
 
         // Create 15 regular published blog posts
-        BlogPost::factory()
+        $posts = BlogPost::factory()
             ->count(15)
             ->published()
             ->create();
 
-        // Create 5 draft blog posts
-        BlogPost::factory()
-            ->count(5)
-            ->draft()
-            ->create();
+
+//        // Create 5 draft blog posts
+//        BlogPost::factory()
+//            ->count(5)
+//            ->draft()
+//            ->create();
+
+        foreach (BlogPost::all() as $post) {
+
+            $post->addMediaFromUrl('https://picsum.photos/300/300')
+                ->toMediaCollection('post-featured-images', 'post-featured-images');;
+        }
     }
 }
