@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContestController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -21,3 +22,7 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 // Gallery routes
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
 Route::get('/gallery/{slug}', [GalleryController::class, 'show'])->name('gallery.show');
+
+// Contest routes
+Route::get('/contests', [ContestController::class, 'index'])->name('contest.index');
+Route::get('/contests/{id}', [ContestController::class, 'show'])->name('contest.show');
