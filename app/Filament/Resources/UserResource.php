@@ -36,7 +36,7 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Basic Information')
-                    ->columns(2)
+                    ->columns()
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->required()
@@ -69,7 +69,7 @@ class UserResource extends Resource
                     ]),
 
                 Forms\Components\Section::make('Academic Information')
-                    ->columns(2)
+                    ->columns()
                     ->schema([
                         Forms\Components\TextInput::make('student_id')
                             ->maxLength(255),
@@ -80,7 +80,7 @@ class UserResource extends Resource
                     ]),
 
                 Forms\Components\Section::make('Competitive Programming Profiles')
-                    ->columns(2)
+                    ->columns()
                     ->schema([
                         Forms\Components\TextInput::make('codeforces_handle')
                             ->maxLength(255),
@@ -125,7 +125,7 @@ class UserResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('codeforces_handle')
                     ->searchable()
-                    ->url(fn ($record) => $record->codeforces_handle ? "https://codeforces.com/profile/{$record->codeforces_handle}" : null)
+                    ->url(fn ($record) => $record->codeforces_handle ? "https://codeforces.com/profile/$record->codeforces_handle" : null)
                     ->openUrlInNewTab()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('max_cf_rating')
