@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 
 class AttendedUsersRelationManager extends RelationManager
@@ -25,7 +26,40 @@ class AttendedUsersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                ...UserResource::table($table)->getColumns(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                SpatieMediaLibraryImageColumn::make('profile Image')
+                    ->collection('profile-images')
+                    ->disk('profile-images'),
+                Tables\Columns\TextColumn::make('username')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('email_verified_at')
+                    ->label('Email Verified')
+                    ->toggleable()->toggledHiddenByDefault()
+                    ->boolean()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('student_id')
+                    ->searchable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('department')
+                    ->searchable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('codeforces_handle')
+                    ->searchable()
+                    ->url(fn ($record) => $record->codeforces_handle ? "https://codeforces.com/profile/$record->codeforces_handle" : null)
+                    ->openUrlInNewTab()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('max_cf_rating')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(),
+
             ])
             ->filters([
                 //
