@@ -1,4 +1,4 @@
-<x-web-layout>
+<x-app-layout>
     @include('components.hero-section')
 
     <section class="py-16 bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
@@ -648,4 +648,4 @@
             </div>
         </div>
     </section>
-</x-web-layout>
+</x-app-layout>

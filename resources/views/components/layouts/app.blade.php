@@ -25,14 +25,19 @@
     <div class="absolute bottom-0 right-0 h-40 w-52 rounded-full bg-violet-200/40 dark:bg-violet-900/20"></div>
 </div>
 
+<!-- Header Navigation -->
+@include('components.header')
 
 <!-- Main Content -->
 <main class="flex-grow">
     {{$slot}}
 </main>
 
+<!-- Footer -->
+@include('components.footer')
 
 @livewire('notifications')
 @filamentScripts
+@stack('scripts')
 </body>
 </html>

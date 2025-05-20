@@ -1,4 +1,4 @@
-<x-web-layout title="About">
+<x-app-layout title="About">
     <div class="container mx-auto px-4 py-16">
         {{-- Header section --}}
         <div class="mb-12 text-center">
@@ -147,6 +147,6 @@
             </div>
         </div>
     </div>
-</x-web-layout>
+</x-app-layout>
 
 

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\Visibility;
 use App\Filament\Resources\GalleryResource\Pages;
-use App\Filament\Resources\GalleryResource\RelationManagers;
 use App\Filament\Resources\MediaRelationManagerResource\RelationManagers\MediaRelationManager;
 use App\Models\Gallery;
 use Filament\Forms;
@@ -82,13 +81,14 @@ class GalleryResource extends Resource
                         SpatieMediaLibraryFileUpload::make('images')
                             ->image()
                             ->multiple()
-                            ->collection('gallery')
+                            ->collection('gallery-images')
+                            ->responsiveImages()
                             ->reorderable()
                             ->imageEditor()
                             ->previewable()
                             ->downloadable()
                             ->maxFiles(50)
-                            ->helperText('Upload up to 20 images. Images will be optimized automatically.')
+                            ->helperText('Upload up to 50 images. Images will be optimized automatically.')
                             ->columnSpanFull(),
                     ]),
 
