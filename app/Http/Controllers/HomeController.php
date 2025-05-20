@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
     public function index()
@@ -14,20 +12,20 @@ class HomeController extends Controller
                 'number' => 1,
                 'title' => 'Master the Green Sheet',
                 'description' => 'Complete our curated set of beginner-level problems. Aim for 60% completion to become eligible for the Blue Sheet.',
-                'icon' => 'book-open'
+                'icon' => 'book-open',
             ],
             [
                 'number' => 2,
                 'title' => 'Join Regular Contests',
                 'description' => 'Participate in our weekly onsite DIU Individual Contest every Friday and track your progress through our Individual Contest Tracker.',
-                'icon' => 'code-xml'
+                'icon' => 'code-xml',
             ],
             [
                 'number' => 3,
                 'title' => 'Visit ACM Lab',
                 'description' => 'Come to KT-310 to meet the community and get help with your competitive programming journey.',
-                'icon' => 'users'
-            ]
+                'icon' => 'users',
+            ],
         ];
 
         // Learning Programs section data
@@ -36,20 +34,20 @@ class HomeController extends Controller
                 'title' => 'Green Sheet Program',
                 'description' => 'Master programming basics with our curated problem set covering fundamental concepts. Solve 60% to qualify for Blue Sheet.',
                 'icon' => 'file-code2',
-                'link' => '/blogs/green-sheet'
+                'link' => '/blogs/green-sheet',
             ],
             [
                 'title' => 'Blue Sheet Advanced',
                 'description' => '1000+ carefully selected problems for advanced programmers. Regular updates based on top solver performance.',
                 'icon' => 'award',
-                'link' => '/blogs/blue-sheet'
+                'link' => '/blogs/blue-sheet',
             ],
             [
                 'title' => 'ACM Advanced Camp',
                 'description' => 'Intensive training program for TOPC top performers with mentoring from seniors and alumni.',
                 'icon' => 'target',
-                'link' => '/blogs/advanced-camp'
-            ]
+                'link' => '/blogs/advanced-camp',
+            ],
         ];
 
         // Stats section data
@@ -58,26 +56,26 @@ class HomeController extends Controller
                 'value' => '100+',
                 'label' => 'Weekly Problems',
                 'icon' => 'code-xml',
-                'color' => 'blue'
+                'color' => 'blue',
             ],
             [
                 'value' => '20+',
                 'label' => 'Annual Contests',
                 'icon' => 'trophy',
-                'color' => 'cyan'
+                'color' => 'cyan',
             ],
             [
                 'value' => '50+',
                 'label' => 'ICPC Participants',
                 'icon' => 'award',
-                'color' => 'violet'
+                'color' => 'violet',
             ],
             [
                 'value' => '200+',
                 'label' => 'Active Members',
                 'icon' => 'users',
-                'color' => 'emerald'
-            ]
+                'color' => 'emerald',
+            ],
         ];
 
         // Competitions section data
@@ -86,20 +84,20 @@ class HomeController extends Controller
                 'title' => 'Take-Off Programming Contest',
                 'description' => 'Semester-based contest series for beginners with mock, preliminary, and main rounds.',
                 'phases' => ['Mock Round', 'Preliminary', 'Main Contest'],
-                'eligibility' => '1st semester students enrolled in Programming & Problem Solving'
+                'eligibility' => '1st semester students enrolled in Programming & Problem Solving',
             ],
             [
                 'title' => 'Unlock The Algorithm',
                 'description' => 'Advanced algorithmic contest focusing on data structures and algorithms.',
                 'phases' => ['Mock Round', 'Preliminary', 'Final Round'],
-                'eligibility' => 'Students enrolled in Algorithms course'
+                'eligibility' => 'Students enrolled in Algorithms course',
             ],
             [
                 'title' => 'DIU ACM Cup',
                 'description' => 'Tournament-style competition to crown the best programmer each semester.',
                 'phases' => ['Group Stage', 'Knockouts', 'Finals'],
-                'eligibility' => 'Top 32 regular programmers'
-            ]
+                'eligibility' => 'Top 32 regular programmers',
+            ],
         ];
 
         // Benefits section data
@@ -107,18 +105,18 @@ class HomeController extends Controller
             [
                 'title' => 'Structured Learning',
                 'description' => 'Follow our carefully designed learning tracks to build skills progressively from basics to advanced topics.',
-                'icon' => 'book-open'
+                'icon' => 'book-open',
             ],
             [
                 'title' => 'Regular Contests',
                 'description' => "Weekly contests help you apply what you've learned and track your improvement over time.",
-                'icon' => 'trophy'
+                'icon' => 'trophy',
             ],
             [
                 'title' => 'Expert Mentorship',
                 'description' => 'Get guidance from experienced seniors and alumni who have excelled in competitive programming.',
-                'icon' => 'users'
-            ]
+                'icon' => 'users',
+            ],
         ];
 
         // Rules section data
@@ -130,8 +128,8 @@ class HomeController extends Controller
                     'No external website usage during contests except the platform',
                     'Hard copy templates are allowed with specified limits',
                     'Code sharing must be enabled on Vjudge contests',
-                    'Any form of plagiarism results in permanent ban'
-                ]
+                    'Any form of plagiarism results in permanent ban',
+                ],
             ],
             [
                 'title' => 'Lab Rules',
@@ -140,8 +138,8 @@ class HomeController extends Controller
                     'Lab access requires regular ACM programmer status',
                     'Maintain respectful behavior towards seniors and teachers',
                     'Avoid disturbing others during practice sessions',
-                    'Keep the lab clean and organized'
-                ]
+                    'Keep the lab clean and organized',
+                ],
             ],
             [
                 'title' => 'Online Contest Rules',
@@ -150,9 +148,9 @@ class HomeController extends Controller
                     'Forum usage prohibited during online contests',
                     'Basic resource websites (GFG, CPAlgo) are allowed',
                     'Maintain code submission history',
-                    'Report technical issues immediately'
-                ]
-            ]
+                    'Report technical issues immediately',
+                ],
+            ],
         ];
 
         return view('homepage', compact(

@@ -9,7 +9,6 @@ use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers\AttendedUsersRelationManager;
 use App\Filament\Resources\EventResource\RelationManagers\RankListsRelationManager;
 use App\Models\Event;
-use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
@@ -24,8 +23,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
 
 class EventResource extends Resource
@@ -33,9 +30,8 @@ class EventResource extends Resource
     protected static ?string $model = Event::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
     protected static ?string $recordTitleAttribute = 'title';
-
-
 
     public static function form(Form $form): Form
     {
@@ -98,7 +94,7 @@ class EventResource extends Resource
                                     ->required(),
                                 Placeholder::make('duration')
                                     ->live()
-                                    ->content(fn($get) => calculateRuntime($get('starting_at'), $get('ending_at')))
+                                    ->content(fn ($get) => calculateRuntime($get('starting_at'), $get('ending_at')))
                                     ->columnSpan('full'),
                             ]),
                     ]),
@@ -137,18 +133,17 @@ class EventResource extends Resource
                             ]),
                     ]),
 
-
                 Section::make('Event History')
                     ->schema([
                         Grid::make()
                             ->schema([
                                 Placeholder::make('created_at')
                                     ->label('Created Date')
-                                    ->content(fn(?Event $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                                    ->content(fn (?Event $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                                 Placeholder::make('updated_at')
                                     ->label('Last Modified Date')
-                                    ->content(fn(?Event $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                                    ->content(fn (?Event $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
                             ]),
                     ])->collapsed(),
             ]);
@@ -230,7 +225,7 @@ class EventResource extends Resource
 
 function calculateRuntime($start, $end): ?string
 {
-    if (!$start || !$end) {
+    if (! $start || ! $end) {
         return 'N/A'; // Placeholder text when either time is not set
     }
 
@@ -242,6 +237,6 @@ function calculateRuntime($start, $end): ?string
     try {
         return $diff->forHumans();
     } catch (Exception $e) {
-        return 'Calculation error: ' . $e->getMessage();
+        return 'Calculation error: '.$e->getMessage();
     }
 }

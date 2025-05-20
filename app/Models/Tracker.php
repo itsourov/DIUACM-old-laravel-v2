@@ -24,6 +24,7 @@ class Tracker extends Model
 
         ];
     }
+
     public function rankLists(): HasMany|Tracker
     {
         return $this->hasMany(RankList::class);

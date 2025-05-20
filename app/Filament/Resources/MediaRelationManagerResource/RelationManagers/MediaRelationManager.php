@@ -33,14 +33,14 @@ class MediaRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('file_name')
                     ->label('Image Preview')
-                    ->getStateUsing(fn(Media $record) => $record->getFullUrl())
+                    ->getStateUsing(fn (Media $record) => $record->getFullUrl())
                     ->square()
                     ->extraImgAttributes(['loading' => 'lazy']),
                 Tables\Columns\TextColumn::make('collection_name')
                     ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size')
-                    ->getStateUsing(fn(Media $record) => number_format($record->size / 1024, 2) . ' KB')
+                    ->getStateUsing(fn (Media $record) => number_format($record->size / 1024, 2).' KB')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -48,7 +48,7 @@ class MediaRelationManager extends RelationManager
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('collection_name')
-                    ->options(fn() => Media::query()
+                    ->options(fn () => Media::query()
                         ->distinct()
                         ->pluck('collection_name', 'collection_name')
                         ->toArray()),
@@ -60,7 +60,7 @@ class MediaRelationManager extends RelationManager
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->url(fn(Media $record) => $record->getFullUrl())
+                    ->url(fn (Media $record) => $record->getFullUrl())
                     ->openUrlInNewTab(),
                 Tables\Actions\DeleteAction::make(),
             ])

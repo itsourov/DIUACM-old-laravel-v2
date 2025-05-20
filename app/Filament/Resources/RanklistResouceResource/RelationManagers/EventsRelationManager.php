@@ -11,8 +11,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EventsRelationManager extends RelationManager
 {
@@ -33,7 +31,7 @@ class EventsRelationManager extends RelationManager
                             ->maxValue(1.0)
                             ->required(),
                     ]),
-                ... EventResource::form($form)->getComponents(),
+                ...EventResource::form($form)->getComponents(),
 
             ]);
     }
@@ -43,7 +41,7 @@ class EventsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->recordTitle(function (Event $record) {
-                return $record->title . "(" . $record->event_link . ")";
+                return $record->title.'('.$record->event_link.')';
             })
             ->columns([
                 Tables\Columns\TextColumn::make('weight')
@@ -61,10 +59,10 @@ class EventsRelationManager extends RelationManager
                     ->recordSelectSearchColumns(['title'])
                     ->modalWidth('3xl')
                     ->recordTitle(function (Event $record) {
-                        return $record->title . ' || ' . $record->starting_at;
+                        return $record->title.' || '.$record->starting_at;
                     })
                     ->multiple()
-                    ->form(fn(AttachAction $action): array => [
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Forms\Components\TextInput::make('weight')
                             ->numeric()
@@ -74,9 +72,7 @@ class EventsRelationManager extends RelationManager
                             ->maxValue(1.0)
                             ->required(),
 
-
-                    ])
-                ,
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

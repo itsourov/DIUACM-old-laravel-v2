@@ -13,19 +13,16 @@ class BlogPostSeeder extends Seeder
     public function run(): void
     {
 
-
         // Create 15 regular published blog posts
         $posts = BlogPost::factory()
             ->count(15)
             ->published()
             ->create();
 
-
-
         foreach (BlogPost::all() as $post) {
 
             $post->addMediaFromUrl('https://picsum.photos/400/400')
-                ->toMediaCollection('post-featured-images', 'post-featured-images');;
+                ->toMediaCollection('post-featured-images', 'post-featured-images');
         }
     }
 }

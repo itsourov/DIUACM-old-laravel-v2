@@ -6,8 +6,6 @@ use App\Enums\Visibility;
 use App\Filament\Resources\GalleryResource\Pages;
 use App\Filament\Resources\MediaRelationManagerResource\RelationManagers\MediaRelationManager;
 use App\Models\Gallery;
-use Filament\Forms;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
@@ -15,25 +13,25 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class GalleryResource extends Resource
 {
     protected static ?string $model = Gallery::class;
+
     protected static ?string $slug = 'galleries';
+
     protected static ?string $navigationIcon = 'heroicon-o-photo';
+
     protected static ?string $recordTitleAttribute = 'title';
+
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
@@ -57,7 +55,7 @@ class GalleryResource extends Resource
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
-                            ->unique(Gallery::class, 'slug', fn($record) => $record),
+                            ->unique(Gallery::class, 'slug', fn ($record) => $record),
 
                         Textarea::make('description')
                             ->rows(3)
@@ -92,7 +90,6 @@ class GalleryResource extends Resource
                             ->helperText('Upload up to 50 images. Images will be optimized automatically.')
                             ->columnSpanFull(),
                     ]),
-
 
             ]);
     }

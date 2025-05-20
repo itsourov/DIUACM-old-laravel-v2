@@ -21,7 +21,7 @@ class GallerySeeder extends Seeder
         foreach (Gallery::all() as $gallery) {
             // Add 3-7 random images to each gallery
             $imageCount = rand(3, 7);
-            
+
             for ($i = 0; $i < $imageCount; $i++) {
                 $gallery->addMediaFromUrl('https://picsum.photos/800/600')
                     ->toMediaCollection('gallery-images', 'gallery-images');

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\Visibility;
 use App\Filament\Resources\TrackerResource\Pages;
-use App\Filament\Resources\TrackerResource\RelationManagers;
 use App\Filament\Resources\TrackerResource\RelationManagers\RanklistsRelationManager;
 use App\Models\Tracker;
 use Filament\Forms;
@@ -12,16 +11,16 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrackerResource extends Resource
 {
     protected static ?string $model = Tracker::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
     protected static ?int $navigationSort = 20;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function getNavigationBadge(): ?string
@@ -50,7 +49,7 @@ class TrackerResource extends Resource
                         Forms\Components\TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
-                            ->unique(ignorable: fn($record) => $record)
+                            ->unique(ignorable: fn ($record) => $record)
                             ->placeholder('tracker-slug')
                             ->helperText('URL-friendly version of the title'),
 
@@ -66,13 +65,12 @@ class TrackerResource extends Resource
                         Forms\Components\TextInput::make('order')
                             ->required()
                             ->numeric()
-                            ->default(fn() => Tracker::max('order') + 1)
+                            ->default(fn () => Tracker::max('order') + 1)
                             ->minValue(0)
                             ->step(1)
                             ->helperText('Display order (lower numbers appear first)'),
 
                     ]),
-
 
             ]);
     }

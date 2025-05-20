@@ -12,20 +12,15 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\Rules\Unique;
 
 class TeamResource extends Resource
 {
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-
-
     protected static ?int $navigationSort = 20;
 
     protected static ?string $recordTitleAttribute = 'name';
-
 
     protected static ?string $model = Team::class;
 
@@ -43,7 +38,7 @@ class TeamResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->placeholder('Team name')
-                                    ->unique(ignoreRecord: true ,modifyRuleUsing: function (Unique $rule, $get) use ($form) {
+                                    ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) {
 
                                         return $rule->where('contest_id', $get('contest_id') ?? $get('owner_id'));
                                     }),
@@ -114,7 +109,7 @@ class TeamResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->badge()
-                    ->color(fn(Team $record): string => match (true) {
+                    ->color(fn (Team $record): string => match (true) {
                         $record->rank === 1 => 'warning',
                         $record->rank === 2 => 'gray',
                         $record->rank === 3 => 'amber',
@@ -149,7 +144,6 @@ class TeamResource extends Resource
                     ->preload()
                     ->multiple(),
 
-
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -158,7 +152,7 @@ class TeamResource extends Resource
                 Tables\Actions\Action::make('view_contest')
                     ->icon('heroicon-o-trophy')
                     ->iconButton()
-                    ->url(fn(Team $record): string => ContestResource::getUrl('edit', ['record' => $record->contest_id])),
+                    ->url(fn (Team $record): string => ContestResource::getUrl('edit', ['record' => $record->contest_id])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -184,7 +178,6 @@ class TeamResource extends Resource
     {
         return ['name', 'contest.name'];
     }
-
 
     public static function getPages(): array
     {

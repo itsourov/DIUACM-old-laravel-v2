@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\EventResource\Pages;
 
-
 use App\Enums\EventType;
 use App\Enums\ParticipationScope;
 use App\Enums\Visibility;
@@ -27,7 +26,7 @@ class CreateEvent extends CreateRecord
                 ])
                 ->action(function (array $data): void {
                     $this->updateInfo($data);
-                })
+                }),
         ];
     }
 
@@ -50,11 +49,12 @@ class CreateEvent extends CreateRecord
     private function fetchCodeforcesContest($contest_link): void
     {
         $contest_id = explode('/', parse_url($contest_link, PHP_URL_PATH))[2] ?? null;
-        if (!$contest_id) {
+        if (! $contest_id) {
             Notification::make()
                 ->title('Invalid Codeforces contest URL')
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -71,6 +71,7 @@ class CreateEvent extends CreateRecord
                         'status' => Visibility::PUBLISHED,
                         'participation_scope' => ParticipationScope::OPEN_FOR_ALL,
                     ]);
+
                     return;
                 }
             }
@@ -85,7 +86,6 @@ class CreateEvent extends CreateRecord
                 ->send();
         }
     }
-
 
     private function fetchVJudgeContest($contest_link): void
     {

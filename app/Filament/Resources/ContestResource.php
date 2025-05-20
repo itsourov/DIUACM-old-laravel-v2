@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\ContestType;
 use App\Filament\Resources\ContestResource\Pages;
-use App\Filament\Resources\ContestResource\RelationManagers;
 use App\Filament\Resources\ContestResource\RelationManagers\TeamsRelationManager;
 use App\Models\Contest;
 use Filament\Forms;
@@ -17,7 +16,6 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ContestResource extends Resource
 {
@@ -26,6 +24,7 @@ class ContestResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
 
     protected static ?int $navigationSort = 10;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationBadgeColor(): string
@@ -103,7 +102,7 @@ class ContestResource extends Resource
                             ->schema([
                                 Forms\Components\Placeholder::make('teams_count')
                                     ->label('Total Teams')
-                                    ->content(fn(Contest $record): int => $record->teams()->count())
+                                    ->content(fn (Contest $record): int => $record->teams()->count())
                                     ->visibleOn('edit'),
                             ]),
                     ])
@@ -120,7 +119,7 @@ class ContestResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn(Contest $record): string => $record->location ?? '')
+                    ->description(fn (Contest $record): string => $record->location ?? '')
                     ->wrap(),
 
                 Tables\Columns\TextColumn::make('contest_type')
@@ -166,30 +165,30 @@ class ContestResource extends Resource
 
                 Tables\Filters\Filter::make('has_gallery')
                     ->label('With Gallery')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('gallery_id')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('gallery_id')),
 
                 Tables\Filters\Filter::make('upcoming')
-                    ->query(fn(Builder $query): Builder => $query->where('date', '>=', now())),
+                    ->query(fn (Builder $query): Builder => $query->where('date', '>=', now())),
 
                 Tables\Filters\Filter::make('past')
-                    ->query(fn(Builder $query): Builder => $query->where('date', '<', now())),
+                    ->query(fn (Builder $query): Builder => $query->where('date', '<', now())),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
 
-//                Action::make('view_teams')
-//                    ->label('Teams')
-//                    ->icon('heroicon-o-user-group')
-//                    ->iconButton()
-//                    ->url(fn(Contest $record): string => TeamResource::getUrl('index', ['contest_id' => $record->id])),
+                //                Action::make('view_teams')
+                //                    ->label('Teams')
+                //                    ->icon('heroicon-o-user-group')
+                //                    ->iconButton()
+                //                    ->url(fn(Contest $record): string => TeamResource::getUrl('index', ['contest_id' => $record->id])),
 
                 Action::make('standings')
                     ->icon('heroicon-o-trophy')
                     ->iconButton()
-                    ->url(fn(Contest $record): ?string => $record->standings_url)
+                    ->url(fn (Contest $record): ?string => $record->standings_url)
                     ->openUrlInNewTab()
-                    ->hidden(fn(Contest $record): bool => empty($record->standings_url)),
+                    ->hidden(fn (Contest $record): bool => empty($record->standings_url)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -202,7 +201,7 @@ class ContestResource extends Resource
     public static function getRelations(): array
     {
         return [
-            TeamsRelationManager::class
+            TeamsRelationManager::class,
         ];
     }
 

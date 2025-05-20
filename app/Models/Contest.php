@@ -29,7 +29,6 @@ class Contest extends Model
         return $this->hasMany(Team::class);
     }
 
-
     protected function casts(): array
     {
         return [

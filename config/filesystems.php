@@ -68,7 +68,7 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        
+
         'gallery-images' => [
             'driver' => 'local',
             'root' => storage_path('app/public/gallery-images'),

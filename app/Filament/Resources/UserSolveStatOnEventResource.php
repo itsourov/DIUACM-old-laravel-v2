@@ -10,16 +10,18 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
 class UserSolveStatOnEventResource extends Resource
 {
     protected static ?string $model = UserSolveStatOnEvent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+
     protected static ?string $navigationLabel = 'User Solve Stats';
 
     protected static ?int $navigationSort = 30;
+
     protected static ?string $recordTitleAttribute = 'id';
+
     protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
@@ -76,7 +78,7 @@ class UserSolveStatOnEventResource extends Resource
                     ->label('CF Handle')
                     ->searchable()
                     ->sortable()
-                    ->url(fn($record) => $record->user->codeforces_handle ?
+                    ->url(fn ($record) => $record->user->codeforces_handle ?
                         "https://codeforces.com/profile/{$record->user->codeforces_handle}" : null)
                     ->openUrlInNewTab()
                     ->toggleable(),
@@ -108,7 +110,6 @@ class UserSolveStatOnEventResource extends Resource
                     ->preload()
                     ->label('Event'),
 
-
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -116,7 +117,7 @@ class UserSolveStatOnEventResource extends Resource
                 Tables\Actions\Action::make('view_event')
                     ->icon('heroicon-o-calendar')
                     ->iconButton()
-                    ->url(fn(UserSolveStatOnEvent $record): string => EventResource::getUrl('edit', ['record' => $record->event_id])),
+                    ->url(fn (UserSolveStatOnEvent $record): string => EventResource::getUrl('edit', ['record' => $record->event_id])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

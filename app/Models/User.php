@@ -17,9 +17,8 @@ class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
     use InteractsWithMedia;
-
-
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +39,6 @@ class User extends Authenticatable implements HasMedia
         'department',
         'student_id',
         'max_cf_rating',
-
 
     ];
 
@@ -90,5 +88,4 @@ class User extends Authenticatable implements HasMedia
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
     }
-
 }

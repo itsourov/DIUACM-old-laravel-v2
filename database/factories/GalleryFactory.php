@@ -14,7 +14,7 @@ class GalleryFactory extends Factory
     public function definition(): array
     {
         $title = $this->faker->words(mt_rand(2, 5), true);
-        
+
         return [
             'title' => $title,
             'slug' => Str::slug($title),

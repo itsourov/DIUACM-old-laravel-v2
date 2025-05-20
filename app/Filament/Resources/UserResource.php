@@ -11,15 +11,17 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationLabel = 'Users';
+
     protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationBadge(): ?string
@@ -54,7 +56,6 @@ class UserResource extends Resource
                             ->enum(Gender::class),
 
                     ]),
-
 
                 Forms\Components\Section::make('Academic Information')
                     ->columns(2)
@@ -110,7 +111,7 @@ class UserResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('codeforces_handle')
                     ->searchable()
-                    ->url(fn($record) => $record->codeforces_handle ? "https://codeforces.com/profile/{$record->codeforces_handle}" : null)
+                    ->url(fn ($record) => $record->codeforces_handle ? "https://codeforces.com/profile/{$record->codeforces_handle}" : null)
                     ->openUrlInNewTab()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('max_cf_rating')
@@ -127,7 +128,7 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('gender')
                     ->options(Gender::class),
                 Tables\Filters\SelectFilter::make('department')
-                    ->options(fn() => User::distinct()->pluck('department', 'department')->filter()->toArray()),
+                    ->options(fn () => User::distinct()->pluck('department', 'department')->filter()->toArray()),
                 Tables\Filters\TernaryFilter::make('email_verified_at')
                     ->label('Email verification')
                     ->placeholder('All users')
@@ -136,15 +137,15 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('has_cf_handle')
                     ->label('Has Codeforces handle')
                     ->toggle()
-                    ->query(fn(Builder $query) => $query->whereNotNull('codeforces_handle')),
+                    ->query(fn (Builder $query) => $query->whereNotNull('codeforces_handle')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\Action::make('verify_email')
                     ->icon('heroicon-o-envelope')
                     ->iconButton()
-                    ->hidden(fn($record) => !is_null($record->email_verified_at))
-                    ->action(fn($record) => $record->update(['email_verified_at' => now()])),
+                    ->hidden(fn ($record) => ! is_null($record->email_verified_at))
+                    ->action(fn ($record) => $record->update(['email_verified_at' => now()])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -153,7 +154,6 @@ class UserResource extends Resource
                 ]),
             ]);
     }
-
 
     public static function getPages(): array
     {

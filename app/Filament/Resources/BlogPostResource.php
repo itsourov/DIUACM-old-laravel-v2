@@ -8,23 +8,19 @@ use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class BlogPostResource extends Resource
@@ -34,7 +30,6 @@ class BlogPostResource extends Resource
     protected static ?string $slug = 'blog-posts';
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
 
     protected static ?int $navigationSort = 1;
 
@@ -51,7 +46,7 @@ class BlogPostResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn(string $state, Set $set) => $set('slug', Str::slug($state))
+                            ->afterStateUpdated(fn (string $state, Set $set) => $set('slug', Str::slug($state))
                             ),
 
                         TextInput::make('slug')

@@ -3,13 +3,10 @@
 namespace App\Filament\Resources\EventResource\RelationManagers;
 
 use App\Filament\Resources\UserResource;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AttendedUsersRelationManager extends RelationManager
 {
@@ -19,7 +16,7 @@ class AttendedUsersRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                ...UserResource::form($form)->getComponents()
+                ...UserResource::form($form)->getComponents(),
             ]);
     }
 
@@ -28,7 +25,7 @@ class AttendedUsersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                ...UserResource::table($table)->getColumns()
+                ...UserResource::table($table)->getColumns(),
             ])
             ->filters([
                 //
@@ -39,7 +36,7 @@ class AttendedUsersRelationManager extends RelationManager
                     ->preloadRecordSelect()
                     ->modalWidth('3xl')
                     ->recordTitle(function ($record) {
-                        return $record->name . ' || ' . $record->username;
+                        return $record->name.' || '.$record->username;
                     })
                     ->multiple(),
             ])

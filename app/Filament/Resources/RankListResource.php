@@ -11,8 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\Rules\Unique;
 
 class RankListResource extends Resource
@@ -22,7 +20,9 @@ class RankListResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 21;
+
     protected static ?string $recordTitleAttribute = 'keyword';
+
     protected static bool $shouldRegisterNavigation = false;
 
     public static function getNavigationBadge(): ?string
@@ -44,7 +44,7 @@ class RankListResource extends Resource
                         Forms\Components\TextInput::make('keyword')
                             ->required()
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) use ($form) {
+                            ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) {
                                 return $rule->where('tracker_id', $get('tracker_id') ?? $get('owner_id'));
                             }),
                         Forms\Components\Textarea::make('description')
@@ -61,7 +61,7 @@ class RankListResource extends Resource
                             ->numeric(),
                         Forms\Components\Toggle::make('is_active')
                             ->required(),
-                    ])
+                    ]),
             ]);
     }
 
