@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Event;
+use App\Models\RankList;
+use App\Models\Tracker;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -34,7 +36,8 @@ class ImportFromOldWebsite extends Command
     {
 
         //        $this->importUsers();
-        $this->importEvents();
+        //        $this->importEvents();
+        $this->importRankListUsers();
     }
 
     public function importEvents()
@@ -51,15 +54,42 @@ class ImportFromOldWebsite extends Command
                 $this->info("Event {$event['id']} imported.");
             }
 
-            $attendedUser = $event['attenders'];
-            foreach ($attendedUser as $user) {
-                $user = User::where('email', $user['email'])->first();
-                if ($user) {
-                    $existingEvent->attendedUsers()->syncWithoutDetaching($user->id);
-                    $this->info("User {$user->email} attended event {$event['id']}.");
-                } else {
-                    $this->error("User {$user['email']} not found. Skipping.");
-                }
+            //            $attendedUser = $event['attenders'];
+            //            foreach ($attendedUser as $user) {
+            //                $user = User::where('email', $user['email'])->first();
+            //                if ($user) {
+            //                    $existingEvent->attendedUsers()->syncWithoutDetaching($user->id);
+            //                    $this->info("User {$user->email} attended event {$event['id']}.");
+            //                } else {
+            //                    $this->error("User {$user['email']} not found. Skipping.");
+            //                }
+            //            }
+
+            $rankLists = $event['rank_lists'];
+
+            foreach ($rankLists as $rl) {
+
+                $tracker = Tracker::updateOrCreate([
+                    'slug' => $rl['tracker']['slug'],
+                ],
+                    $rl['tracker']
+                );
+                $rankLists = $tracker->rankLists()->updateOrCreate(
+                    [
+                        'keyword' => $rl['session'],
+                    ],
+                    [
+                        'keyword' => $rl['session'],
+                        'description' => $rl['description'],
+                        'weight_of_upsolve' => $rl['weight_of_upsolve'],
+                        'is_active' => ! $rl['is_archived'],
+                    ]
+                );
+                $this->info("Rank list {$rankLists->id} created.");
+
+                $rankLists->events()->syncWithoutDetaching([
+                    $existingEvent->id => ['weight' => $rl['pivot']['weight']],
+                ]);
             }
 
         }
@@ -87,6 +117,32 @@ class ImportFromOldWebsite extends Command
             //            }
 
             $this->info("User {$user['email']} imported.");
+        }
+    }
+
+    private function importRankListUsers(): void
+    {
+        $rankLists = Http::get('https://admin.diuacm.com/api/ranklists')->json();
+
+        foreach ($rankLists as $rl) {
+            $rankLists = RankList::where('keyword', $rl['session'])->first();
+            if (! $rankLists) {
+                $this->error("Rank list {$rl['session']} not found. Skipping.");
+
+                continue;
+            }
+
+            $users = $rl['users'];
+            foreach ($users as $user) {
+                $user = User::where('email', $user['email'])->first();
+                if ($user) {
+                    $rankLists->users()->syncWithoutDetaching($user->id);
+                    $this->info("User {$user->email} imported to rank list {$rl['session']}.");
+                } else {
+                    $this->error("User {$user['email']} not found. Skipping.");
+                }
+            }
+
         }
     }
 }

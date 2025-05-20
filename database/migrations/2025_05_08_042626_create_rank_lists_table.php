@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('keyword');
             $table->text('description')->nullable();
             $table->float('weight_of_upsolve');
-            $table->integer('order');
+            $table->integer('order')->default(0);
             $table->boolean('is_active')
                 ->default(true);
             $table->timestamps();

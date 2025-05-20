@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->enum('status', Visibility::toArray())->default(Visibility::DRAFT);
-            $table->integer('order');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }

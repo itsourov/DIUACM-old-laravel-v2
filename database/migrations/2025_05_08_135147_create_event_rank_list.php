@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('event_rank_list', function (Blueprint $table) {
             $table->foreignIdFor(Event::class)->constrained('events')->cascadeOnDelete();
             $table->foreignIdFor(RankList::class)->constrained('rank_lists')->cascadeOnDelete();
-            $table->float('weight')->default(1);
+            $table->float('weight');
 
             $table->unique(['event_id', 'rank_list_id']);
         });
