@@ -125,7 +125,7 @@ class UserResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('codeforces_handle')
                     ->searchable()
-                    ->url(fn ($record) => $record->codeforces_handle ? "https://codeforces.com/profile/$record->codeforces_handle" : null)
+                    ->url(fn($record) => $record->codeforces_handle ? "https://codeforces.com/profile/$record->codeforces_handle" : null)
                     ->openUrlInNewTab()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('max_cf_rating')
@@ -142,7 +142,7 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('gender')
                     ->options(Gender::class),
                 Tables\Filters\SelectFilter::make('department')
-                    ->options(fn () => User::distinct()->pluck('department', 'department')->filter()->toArray()),
+                    ->options(fn() => User::distinct()->pluck('department', 'department')->filter()->toArray()),
                 Tables\Filters\TernaryFilter::make('email_verified_at')
                     ->label('Email verification')
                     ->placeholder('All users')
@@ -151,15 +151,15 @@ class UserResource extends Resource
                 Tables\Filters\Filter::make('has_cf_handle')
                     ->label('Has Codeforces handle')
                     ->toggle()
-                    ->query(fn (Builder $query) => $query->whereNotNull('codeforces_handle')),
+                    ->query(fn(Builder $query) => $query->whereNotNull('codeforces_handle')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\Action::make('verify_email')
                     ->icon('heroicon-o-envelope')
                     ->iconButton()
-                    ->hidden(fn ($record) => ! is_null($record->email_verified_at))
-                    ->action(fn ($record) => $record->update(['email_verified_at' => now()])),
+                    ->hidden(fn($record) => !is_null($record->email_verified_at))
+                    ->action(fn($record) => $record->update(['email_verified_at' => now()])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
