@@ -68,6 +68,15 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        
+        'gallery-images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/gallery-images'),
+            'url' => env('APP_URL').'/storage/gallery-images',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
 
     ],
 

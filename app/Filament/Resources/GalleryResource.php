@@ -82,6 +82,7 @@ class GalleryResource extends Resource
                             ->image()
                             ->multiple()
                             ->collection('gallery-images')
+                            ->disk('gallery-images')
                             ->responsiveImages()
                             ->reorderable()
                             ->imageEditor()
