@@ -59,7 +59,7 @@ class User extends Authenticatable implements HasMedia
 
     public function rankLists(): BelongsToMany
     {
-        return $this->belongsToMany(RankList::class, 'rank_list_user', 'user_id', 'rank_list_id');
+        return $this->belongsToMany(RankList::class, 'rank_list_user', 'user_id', 'rank_list_id')->withPivot('score');
     }
 
     public function attendedEvents(): BelongsToMany
