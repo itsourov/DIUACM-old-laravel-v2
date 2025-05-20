@@ -61,7 +61,6 @@ class BlogPostResource extends Resource
                             ->maxLength(255),
 
                         SpatieMediaLibraryFileUpload::make('Featured Image')
-
                             ->collection('post-featured-images')
                             ->disk('post-featured-images')
                             ->helperText('This cover image is used in your blog post as a feature image. Recommended image size 1200 X 628')

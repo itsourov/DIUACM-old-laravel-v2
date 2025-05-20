@@ -6,9 +6,11 @@ use App\Enums\Gender;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -39,6 +41,15 @@ class UserResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
+                        SpatieMediaLibraryFileUpload::make('Profile Image')
+                            ->collection('profile-images')
+                            ->disk('profile-images')
+                            ->image()
+                            ->avatar()
+                            ->previewable()
+                            ->imageEditor()
+                            ->maxSize(1024 * 5),
+
                         Forms\Components\TextInput::make('username')
                             ->required()
                             ->maxLength(255)
@@ -92,6 +103,9 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                SpatieMediaLibraryImageColumn::make('profile Image')
+                    ->collection('profile-images')
+                    ->disk('profile-images'),
                 Tables\Columns\TextColumn::make('username')
                     ->searchable()
                     ->sortable(),
