@@ -129,37 +129,50 @@
                         @foreach($contest->teams->sortBy(function($team) {
                             return $team->rank !== null ? $team->rank : 9999;
                         }) as $team)
-                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all duration-300">
                                 <div class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 p-5 flex justify-between items-center">
                                     <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $team->name }}</h3>
+                                    
                                     @if($team->rank)
-                                        <span class="inline-flex items-center justify-center bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-medium border border-amber-200 shadow-sm">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                            @if($team->rank == 1)
+                                                bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400
+                                            @elseif($team->rank == 2)
+                                                bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300
+                                            @elseif($team->rank == 3)
+                                                bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-500
+                                            @else
+                                                bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400
+                                            @endif
+                                        ">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
                                                 <path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.11"></path>
-                                                <path d="M15 7a3 3 0 1 0-6 0c0 1.3.84 2.4 2 2.83.24.06.5.06.76 0A3.01 3.01 0 0 0 15 7z"></path>
+                                                <path d="M15 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1"></path>
                                             </svg>
                                             Rank: {{ $team->rank }}
                                         </span>
                                     @endif
                                 </div>
+                                
                                 <div class="p-5">
-                                    <div class="space-y-4">
+                                    <div class="space-y-3">
+                                        <h4 class="text-sm font-medium text-slate-500 dark:text-slate-400">Team Members:</h4>
                                         @foreach($team->members as $member)
-                                            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
-                                                <div class="relative h-10 w-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/60">
+                                            <div class="flex items-center gap-3">
+                                                <div class="relative h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/60">
                                                     @if($member->getMedia('profile-images')->isNotEmpty())
                                                         <img src="{{ $member->getFirstMediaUrl('profile-images', 'preview') }}" 
-                                                             alt="{{ $member->name }}" 
-                                                             class="h-full w-full object-cover">
+                                                            alt="{{ $member->name }}" 
+                                                            class="h-full w-full object-cover">
                                                     @else
-                                                        <div class="h-full w-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-medium">
+                                                        <div class="h-full w-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-medium text-xs">
                                                             {{ substr($member->name, 0, 1) }}
                                                         </div>
                                                     @endif
                                                 </div>
-                                                <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
+                                                <a href="{{ route('programmer.show', $member->username) }}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                                                     {{ $member->name }}
-                                                </span>
+                                                </a>
                                             </div>
                                         @endforeach
                                     </div>
