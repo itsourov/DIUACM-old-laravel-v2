@@ -30,72 +30,74 @@ class RecalculateRanklistScore extends Command
     public function handle()
     {
         $this->info('Starting to recalculate ranklist scores...');
-        
+
         // Get all active ranklists
         $rankLists = RankList::where('is_active', true)->get();
-        
+
         if ($rankLists->isEmpty()) {
             $this->warn('No active ranklists found.');
+
             return;
         }
-        
-        $this->info('Found ' . $rankLists->count() . ' active ranklists.');
-        
+
+        $this->info('Found '.$rankLists->count().' active ranklists.');
+
         $bar = $this->output->createProgressBar($rankLists->count());
         $bar->start();
-        
+
         foreach ($rankLists as $rankList) {
             $this->recalculateScoresForRankList($rankList);
             $bar->advance();
         }
-        
+
         $bar->finish();
         $this->newLine();
         $this->info('Ranklist scores recalculation completed successfully!');
     }
-    
+
     /**
      * Recalculate scores for all users in a specific ranklist
      */
     private function recalculateScoresForRankList(RankList $rankList)
     {
-        $this->line('Processing ranklist: ' . $rankList->keyword);
-        
+        $this->line('Processing ranklist: '.$rankList->keyword);
+
         // Get all events associated with this ranklist
         $events = $rankList->events;
-        
+
         if ($events->isEmpty()) {
             $this->comment('No events found for this ranklist.');
+
             return;
         }
-        
+
         // Get all users
         $users = User::all();
-        
+
         $weightOfUpsolve = $rankList->weight_of_upsolve;
-        
+
         foreach ($users as $user) {
             $totalScore = 0;
-            
+
             foreach ($events as $event) {
                 // Get the weight of this event for this ranklist
                 $eventWeight = $event->pivot->weight;
-                
+
                 // Find user's solve stats for this event
                 $userStat = UserSolveStatOnEvent::where('user_id', $user->id)
                     ->where('event_id', $event->id)
                     ->first();
-                
+
                 if ($userStat) {
                     // Calculate score based on the formula: solvecountweight + upsolvecountweight*weightofupsolve
                     $solveScore = $userStat->solve_count * $eventWeight;
                     $upsolveScore = $userStat->upsolve_count * $eventWeight * $weightOfUpsolve;
-                    
+
                     $eventScore = $solveScore + $upsolveScore;
                     $totalScore += $eventScore;
                 }
             }
-            
+
             // Update the user's score in the pivot table
             DB::table('rank_list_user')
                 ->updateOrInsert(
@@ -108,7 +110,7 @@ class RecalculateRanklistScore extends Command
                     ]
                 );
         }
-        
-        $this->line('Completed processing ranklist: ' . $rankList->keyword);
+
+        $this->line('Completed processing ranklist: '.$rankList->keyword);
     }
 }

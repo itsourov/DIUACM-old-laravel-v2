@@ -18,8 +18,8 @@
                 <div class="bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 p-10 relative">
                     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                         <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white dark:border-slate-700 shadow-lg bg-white dark:bg-slate-700">
-                            @if($programmer->getMedia('profile-images')->isNotEmpty())
-                                <img src="{{ $programmer->getFirstMediaUrl('profile-images', 'preview') }}" 
+                            @if($programmer->getMedia('avatar')->isNotEmpty())
+                                <img src="{{ $programmer->getFirstMediaUrl('avatar', 'preview') }}" 
                                      alt="{{ $programmer->name }}" 
                                      class="w-full h-full object-cover">
                             @else
@@ -227,8 +227,8 @@
                                         @foreach($team->members->where('id', '!=', $programmer->id) as $member)
                                             <div class="flex items-center gap-3">
                                                 <div class="relative h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/60">
-                                                    @if($member->getMedia('profile-images')->isNotEmpty())
-                                                        <img src="{{ $member->getFirstMediaUrl('profile-images', 'preview') }}" 
+                                                    @if($member->getMedia('avatar')->isNotEmpty())
+                                                        <img src="{{ $member->getFirstMediaUrl('avatar', 'preview') }}" 
                                                             alt="{{ $member->name }}" 
                                                             class="h-full w-full object-cover">
                                                     @else

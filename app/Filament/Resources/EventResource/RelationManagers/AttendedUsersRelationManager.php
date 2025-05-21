@@ -31,8 +31,8 @@ class AttendedUsersRelationManager extends RelationManager
                     ->sortable()
                     ->weight('bold'),
                 SpatieMediaLibraryImageColumn::make('profile Image')
-                    ->collection('profile-images')
-                    ->disk('profile-images'),
+                    ->collection('avatar')
+                    ->disk('avatar'),
                 Tables\Columns\TextColumn::make('username')
                     ->searchable()
                     ->sortable(),

@@ -160,8 +160,8 @@
                                         @foreach($team->members as $member)
                                             <div class="flex items-center gap-3">
                                                 <div class="relative h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/60">
-                                                    @if($member->getMedia('profile-images')->isNotEmpty())
-                                                        <img src="{{ $member->getFirstMediaUrl('profile-images', 'preview') }}" 
+                                                    @if($member->getMedia('avatar')->isNotEmpty())
+                                                        <img src="{{ $member->getFirstMediaUrl('avatar', 'preview') }}" 
                                                             alt="{{ $member->name }}" 
                                                             class="h-full w-full object-cover">
                                                     @else

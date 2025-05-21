@@ -88,4 +88,12 @@ class User extends Authenticatable implements HasMedia
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('avatar')
+            ->useFallbackUrl('/images/anonymous-user.jpg')
+            ->useFallbackPath(public_path('/images/anonymous-user.jpg'));
+    }
 }

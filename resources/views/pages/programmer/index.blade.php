@@ -46,8 +46,8 @@
                         <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 transition-all hover:shadow-lg h-full flex flex-col">
                             <div class="bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 p-6 pb-8 relative">
                                 <div class="mx-auto w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-700 shadow-md bg-white dark:bg-slate-700 relative">
-                                    @if($programmer->getMedia('profile-images')->isNotEmpty())
-                                        <img src="{{ $programmer->getFirstMediaUrl('profile-images', 'preview') }}" 
+                                    @if($programmer->getMedia('avatar')->isNotEmpty())
+                                        <img src="{{ $programmer->getFirstMediaUrl('avatar', 'preview') }}" 
                                             alt="{{ $programmer->name }}" 
                                             class="w-full h-full object-cover">
                                     @else

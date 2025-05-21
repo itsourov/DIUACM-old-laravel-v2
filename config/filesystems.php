@@ -77,10 +77,10 @@ return [
             'throw' => false,
             'report' => false,
         ],
-        'profile-images' => [
+        'avatar' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/profile-images'),
-            'url' => env('APP_URL').'/storage/profile-images',
+            'root' => storage_path('app/public/avatar'),
+            'url' => env('APP_URL').'/storage/avatar',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

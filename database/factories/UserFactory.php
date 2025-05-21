@@ -54,7 +54,7 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             // Add a profile image using the Spatie Media Library
             $user->addMediaFromUrl('https://i.pravatar.cc/300?u='.$user->id)
-                ->toMediaCollection('profile-images', 'profile-images');
+                ->toMediaCollection('avatar', 'avatar');
         });
     }
 

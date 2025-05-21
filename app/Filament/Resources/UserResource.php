@@ -42,8 +42,8 @@ class UserResource extends Resource
                             ->required()
                             ->maxLength(255),
                         SpatieMediaLibraryFileUpload::make('Profile Image')
-                            ->collection('profile-images')
-                            ->disk('profile-images')
+                            ->collection('avatar')
+                            ->disk('avatar')
                             ->image()
                             ->avatar()
                             ->previewable()
@@ -104,8 +104,8 @@ class UserResource extends Resource
                     ->sortable()
                     ->weight('bold'),
                 SpatieMediaLibraryImageColumn::make('profile Image')
-                    ->collection('profile-images')
-                    ->disk('profile-images'),
+                    ->collection('avatar')
+                    ->disk('avatar'),
                 Tables\Columns\TextColumn::make('username')
                     ->searchable()
                     ->sortable(),
