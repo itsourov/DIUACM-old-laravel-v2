@@ -7,6 +7,7 @@ use App\Enums\ParticipationScope;
 use App\Enums\Visibility;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
@@ -33,6 +34,11 @@ class Event extends Model
     public function attendedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'event_user_attendance', 'event_id', 'user_id')->withTimestamps();
+    }
+
+    public function userSolveStats(): HasMany
+    {
+        return $this->hasMany(UserSolveStatOnEvent::class);
     }
 
     protected function casts(): array
