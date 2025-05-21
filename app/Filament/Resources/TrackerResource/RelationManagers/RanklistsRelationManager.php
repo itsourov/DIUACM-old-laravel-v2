@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class RanklistsRelationManager extends RelationManager
 {
@@ -26,6 +27,9 @@ class RanklistsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->recordUrl(
+                fn (Model $record): string => route('filament.admin.resources.rank-lists.edit', ['record' => $record]),
+            )
             ->recordTitleAttribute('keyword')
             ->columns(RankListResource::table($table)->getColumns())
             ->filters([
@@ -35,7 +39,7 @@ class RanklistsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->url(route('filament.admin.resources.rank-lists.edit', $this->ownerRecord->id)),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

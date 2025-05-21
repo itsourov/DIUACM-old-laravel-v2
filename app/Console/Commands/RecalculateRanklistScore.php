@@ -71,7 +71,6 @@ class RecalculateRanklistScore extends Command
             return;
         }
 
-       
         $users = $rankList->users;
 
         $weightOfUpsolve = $rankList->weight_of_upsolve;

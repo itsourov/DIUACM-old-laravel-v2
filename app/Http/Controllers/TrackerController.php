@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\RankList;
+use App\Enums\Visibility;
 use App\Models\Tracker;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -16,53 +14,64 @@ class TrackerController extends Controller
      */
     public function index(): View
     {
-        $trackers = Tracker::where('status', 'published')
+        $trackers = Tracker::where('status', Visibility::PUBLISHED)
             ->orderBy('order')
             ->paginate(10);
-            
+
         return view('pages.trackers.index', compact('trackers'));
     }
 
     /**
      * Display the specified tracker with its ranklists.
      */
-    public function show(string $slug, Request $request): View
+    public function show(string $slug, Request $request)
     {
-        $tracker = Tracker::where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
-        
-        // Get the requested ranklist by keyword or default to the first one
+
         $keyword = $request->query('keyword');
-        
-        if ($keyword) {
-            $ranklist = $tracker->rankLists()
-                ->where('keyword', $keyword)
-                ->where('is_active', true)
-                ->firstOrFail();
-        } else {
-            $ranklist = $tracker->rankLists()
-                ->where('is_active', true)
-                ->orderBy('order')
-                ->firstOrFail();
-        }
-        
-        // Get other ranklists for this tracker
-        $otherRanklists = $tracker->rankLists()
-            ->where('is_active', true)
-            ->where('id', '!=', $ranklist->id)
+
+        $tracker = Tracker::where('slug', $slug)
+            ->where('status', Visibility::PUBLISHED)
+            ->firstOrFail();
+
+        // Get all keywords from ranklists for this tracker
+        $allRankListKeywords = $tracker->rankLists()
+            ->pluck('keyword')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        $ranklist = $tracker->rankLists()
+            ->when($keyword, function ($query) use ($keyword) {
+                return $query->where('keyword', $keyword);
+            })
             ->orderBy('order')
-            ->get();
-        
-        // Get users and events for the ranklist
-        $users = $ranklist->users;
-        $events = $ranklist->events;
-        
-        // Load solve stats for all events
-        foreach ($events as $event) {
-            $event->userSolveStats = $event->userSolveStats()->get();
+            ->first();
+
+        if (! $ranklist) {
+            abort(404, 'No rank lists available for this tracker');
         }
-        
-        return view('pages.trackers.show', compact('tracker', 'ranklist', 'otherRanklists', 'users', 'events'));
+
+        $ranklist->load([
+            'users' => function ($query) {
+                $query->select('users.id', 'name', 'username', 'codeforces_handle')
+                    ->orderByPivot('score', 'desc');
+            },
+            'users.media' => function ($query) {
+                $query->where('collection_name', 'avatar')
+                    ->latest()
+                    ->limit(1);
+            },
+            'users.solveStats' => function ($query) use ($ranklist) {
+                $query->whereIn('event_id', $ranklist->events->pluck('id'));
+            },
+            'events' => function ($query) {
+                $query->select('events.id', 'title', 'starting_at')
+                    ->withPivot('weight')
+                    ->orderBy('starting_at', 'desc');
+            },
+        ]);
+
+        return view('pages.trackers.show', compact('tracker', 'ranklist', 'allRankListKeywords'));
     }
-} 
+}

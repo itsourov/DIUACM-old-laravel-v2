@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Image\Enums\Fit;
@@ -65,6 +66,11 @@ class User extends Authenticatable implements HasMedia
     public function attendedEvents(): BelongsToMany
     {
         return $this->belongsToMany(Event::class, 'event_user_attendance', 'user_id', 'event_id')->withTimestamps();
+    }
+
+    public function solveStats(): User|HasMany
+    {
+        return $this->hasMany(UserSolveStatOnEvent::class, 'user_id', 'id');
     }
 
     /**
