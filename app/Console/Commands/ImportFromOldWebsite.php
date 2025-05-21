@@ -124,8 +124,8 @@ class ImportFromOldWebsite extends Command
         $rankLists = Http::get('https://admin.diuacm.com/api/ranklists')->json();
 
         foreach ($rankLists as $rl) {
-            $rankLists = RankList::where('keyword', $rl['session'])->first();
-            if (! $rankLists) {
+            $rankList = RankList::where('keyword', $rl['session'])->first();
+            if (! $rankList) {
                 $this->error("Rank list {$rl['session']} not found. Skipping.");
 
                 continue;
@@ -135,7 +135,7 @@ class ImportFromOldWebsite extends Command
             foreach ($users as $user) {
                 $user = User::where('email', $user['email'])->first();
                 if ($user) {
-                    $rankLists->users()->syncWithoutDetaching($user->id);
+                    $rankList->users()->syncWithoutDetaching($user->id);
                     $this->info("User {$user->email} imported to rank list {$rl['session']}.");
                 } else {
                     $this->error("User {$user['email']} not found. Skipping.");
