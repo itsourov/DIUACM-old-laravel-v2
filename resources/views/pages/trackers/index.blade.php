@@ -18,8 +18,8 @@
         <!-- Trackers grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($trackers as $tracker)
-                <div
-                    class="group relative bg-white dark:bg-slate-800/80 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                <a href="{{ route('tracker.show', $tracker->slug) }}" 
+                   class="block group relative bg-white dark:bg-slate-800/80 shadow-md hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
                     <div
                         class="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-blue-500/5 dark:from-blue-600/0 dark:to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -41,7 +41,7 @@
                         <p class="text-slate-600 dark:text-slate-300 mb-6 line-clamp-2 h-12">{{ $tracker->description }}</p>
 
                         <div class="flex justify-end">
-                            <a href="{{ route('tracker.show', $tracker->slug) }}"
+                            <span
                                class="inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 group-hover:translate-x-1 transition-transform duration-200">
                                 View ranklists
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -50,10 +50,10 @@
                                     <path d="M5 12h14"></path>
                                     <path d="m12 5 7 7-7 7"></path>
                                 </svg>
-                            </a>
+                            </span>
                         </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <div
                     class="col-span-1 md:col-span-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-8 text-center">
