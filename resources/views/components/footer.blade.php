@@ -31,6 +31,7 @@
             <div class="mt-4 md:mt-0 flex space-x-6">
                 <a href="/about" class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">About</a>
                 <a href="{{ route('contact') }}" class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Contact</a>
+                <a href="/settings" class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Settings</a>
                 <a href="/privacy" class="text-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400">Privacy</a>
             </div>
         </div>

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/settings', [PageController::class, 'settings'])->name('settings');
 
 // Contact routes
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
