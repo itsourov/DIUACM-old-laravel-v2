@@ -43,3 +43,7 @@ Route::get('/programmers/{username}', [ProgrammerController::class, 'show'])->na
 // Tracker routes
 Route::get('/trackers', [TrackerController::class, 'index'])->name('tracker.index');
 Route::get('/trackers/{slug}', [TrackerController::class, 'show'])->name('tracker.show');
+
+// Ranklist routes
+Route::post('/ranklists/{id}/join', [TrackerController::class, 'joinRanklist'])->name('ranklist.join')->middleware('auth');
+Route::delete('/ranklists/{id}/leave', [TrackerController::class, 'leaveRanklist'])->name('ranklist.leave')->middleware('auth');

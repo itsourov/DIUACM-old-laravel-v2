@@ -1,90 +1,185 @@
 <x-app-layout title="{{ $tracker->title }}">
     <div class="container mx-auto px-4 py-12">
-        {{-- Tracker header section --}}
-        <div
-            class="bg-white dark:bg-slate-800 shadow-md rounded-2xl p-6 md:p-8 border border-slate-200 dark:border-slate-700 mb-8">
+        <div class="mb-8">
+            {{-- Back link --}}
+            <a href="{{ route('tracker.index') }}"
+               class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-arrow-left h-4 w-4 mr-1" aria-hidden="true">
+                    <path d="m12 19-7-7 7-7"></path>
+                    <path d="M19 12H5"></path>
+                </svg>
+                Back to Trackers
+            </a>
 
-            <div class="mb-6">
-                {{-- Back link --}}
-                <a href="{{ route('tracker.index') }}"
-                   class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-arrow-left h-4 w-4 mr-1" aria-hidden="true">
-                        <path d="m12 19-7-7 7-7"></path>
-                        <path d="M19 12H5"></path>
-                    </svg>
-                    Back to Trackers
-                </a>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{{ $tracker->title }}
+                    </h1>
 
-                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                    <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">{{ $tracker->title }}
-                        </h1>
+                    @if ($tracker->description)
+                        <p class="mt-3 text-slate-600 dark:text-slate-300">
+                            {{ $tracker->description }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-                        @if ($tracker->description)
-                            <p class="mt-3 text-slate-600 dark:text-slate-300">
-                                {{ $tracker->description }}
-                            </p>
-                        @endif
+            {{-- Combined ranklist navigation and info --}}
+            <div class="mb-6 bg-white dark:bg-slate-800 shadow-sm rounded-xl p-5 border border-slate-200 dark:border-slate-700">
+                <div class="flex flex-col space-y-4">
+                    {{-- Ranklist navigation tabs --}}
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($allRankListKeywords as $rankListKeyword)
+                            <a href="{{ route('tracker.show', [$tracker->slug, 'keyword' => $rankListKeyword]) }}"
+                               class="inline-flex px-4 py-2 rounded-lg text-sm font-medium {{ $ranklist->keyword == $rankListKeyword ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600' }}">
+                                {{ $rankListKeyword }}
+                            </a>
+                        @endforeach
+                    </div>
+                    
+                    {{-- Divider --}}
+                    @if ($ranklist->description)
+                        <div class="border-t border-slate-200 dark:border-slate-700"></div>
+                    @endif
+                    
+                    {{-- Ranklist info --}}
+                    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                        <div>
+                            @if ($ranklist->description)
+                                <p class="text-slate-600 dark:text-slate-400 text-sm">{{ $ranklist->description }}</p>
+                            @endif
+                        </div>
+                        
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span
+                                class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-blue-50/80 text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-800/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="h-4 w-4">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>                            {{ $ranklist->users->count() }} users
+                            </span>
+
+                            <span
+                                class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-blue-50/80 text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-800/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="h-4 w-4">
+                                    <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"></path>
+                                    <path d="m18 2 4 4-4 4"></path>
+                                    <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"></path>
+                                    <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"></path>
+                                    <path d="m18 14 4 4-4 4"></path>
+                                </svg>
+                                {{ $ranklist->events->count() }} events
+                            </span>
+                            
+                            @auth
+                                @php
+                                    $userInRanklist = auth()->check() && $ranklist->users->contains(auth()->user()->id);
+                                @endphp
+                                
+                                @if($userInRanklist)
+                                    <form action="{{ route('ranklist.leave', $ranklist->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-red-50/80 text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-900/20 dark:text-red-400 dark:ring-red-800/60 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                                                <path d="m15 9-6 6"></path>
+                                                <path d="m9 9 6 6"></path>
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                            </svg>
+                                            Leave Ranklist
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('ranklist.join', $ranklist->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-green-50/80 text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-800/60 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                                                <path d="M12 5v14"></path>
+                                                <path d="M5 12h14"></path>
+                                            </svg>
+                                            Join Ranklist
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-slate-50/80 text-slate-700 ring-1 ring-inset ring-slate-600/20 dark:bg-slate-900/20 dark:text-slate-400 dark:ring-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-900/30 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                    Login to Join
+                                </a>
+                            @endauth
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Ranklist navigation tabs --}}
+            {{-- Flash Messages --}}
+            @if(session('success') || session('error') || session('info'))
             <div class="mb-6">
-                <div class="flex flex-wrap gap-2">
-
-                    @foreach ($allRankListKeywords as $rankListKeyword)
-                        <a href="{{ route('tracker.show', [$tracker->slug, 'keyword' => $rankListKeyword]) }}"
-                           class="inline-flex px-4 py-2 rounded-lg text-sm font-medium {{ $ranklist->keyword == $rankListKeyword ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600' }}">
-                            {{ $rankListKeyword }}
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Current ranklist info --}}
-            <div class="mb-6">
-                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-3">
-                    <div>
-
-                        @if ($ranklist->description)
-                            <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">{{ $ranklist->description }}</p>
-                        @endif
-                    </div>
-
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span
-                            class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-blue-50/80 text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-800/60">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="h-4 w-4">
-                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
+                @if(session('success'))
+                <div class="rounded-md bg-green-50 dark:bg-green-900/20 p-4 border border-green-200 dark:border-green-800/50">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-400" aria-hidden="true">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <path d="m9 11 3 3L22 4"></path>
                             </svg>
-                            {{ $ranklist->users->count() }} users
-                        </span>
-
-                        <span
-                            class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-blue-50/80 text-blue-700 ring-1 ring-inset ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-800/60">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="h-4 w-4">
-                                <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"></path>
-                                <path d="m18 2 4 4-4 4"></path>
-                                <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"></path>
-                                <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"></path>
-                                <path d="m18 14 4 4-4 4"></path>
-                            </svg>
-                            {{ $ranklist->events->count() }} events
-                        </span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800 dark:text-green-300">{{ session('success') }}</p>
+                        </div>
                     </div>
                 </div>
+                @endif
+                
+                @if(session('error'))
+                <div class="rounded-md bg-red-50 dark:bg-red-900/20 p-4 border border-red-200 dark:border-red-800/50">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-red-400" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m15 9-6 6"></path>
+                                <path d="m9 9 6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800 dark:text-red-300">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                
+                @if(session('info'))
+                <div class="rounded-md bg-blue-50 dark:bg-blue-900/20 p-4 border border-blue-200 dark:border-blue-800/50">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-blue-400" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-blue-800 dark:text-blue-300">{{ session('info') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
+            @endif
 
             {{-- Ranklist table --}}
-            <div>
+            <div class="bg-white dark:bg-slate-800 shadow-sm rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                 @if ($ranklist->users->isEmpty() || $ranklist->events->isEmpty())
                     <div
                         class="text-center py-8 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -269,8 +364,5 @@
                     </div>
                 @endif
             </div>
-
-
-        </div>
     </div>
 </x-app-layout>

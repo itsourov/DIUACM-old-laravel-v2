@@ -74,4 +74,40 @@ class TrackerController extends Controller
 
         return view('pages.trackers.show', compact('tracker', 'ranklist', 'allRankListKeywords'));
     }
+    
+    /**
+     * Join a ranklist
+     */
+    public function joinRanklist($id)
+    {
+        $ranklist = \App\Models\RankList::findOrFail($id);
+        
+        // Check if user is already part of this ranklist
+        if ($ranklist->users()->where('user_id', auth()->id())->exists()) {
+            return back()->with('info', 'You are already part of this ranklist.');
+        }
+        
+        // Add user to ranklist with initial score of 0
+        $ranklist->users()->attach(auth()->id(), ['score' => 0]);
+        
+        return back()->with('success', 'You have successfully joined the ranklist.');
+    }
+    
+    /**
+     * Leave a ranklist
+     */
+    public function leaveRanklist($id)
+    {
+        $ranklist = \App\Models\RankList::findOrFail($id);
+        
+        // Check if user is part of this ranklist
+        if (!$ranklist->users()->where('user_id', auth()->id())->exists()) {
+            return back()->with('info', 'You are not part of this ranklist.');
+        }
+        
+        // Remove user from ranklist
+        $ranklist->users()->detach(auth()->id());
+        
+        return back()->with('success', 'You have successfully left the ranklist.');
+    }
 }
