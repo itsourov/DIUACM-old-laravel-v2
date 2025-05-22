@@ -12,7 +12,6 @@ use App\Http\Controllers\TrackerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/login', [HomeController::class, 'index'])->name('login'); // Using home page as login page
 Route::get('/about', [PageController::class, 'about'])->name('about');
 
 // Contact routes
@@ -45,5 +44,5 @@ Route::get('/trackers', [TrackerController::class, 'index'])->name('tracker.inde
 Route::get('/trackers/{slug}', [TrackerController::class, 'show'])->name('tracker.show');
 
 // Ranklist routes
-Route::post('/ranklists/{id}/join', [TrackerController::class, 'joinRanklist'])->name('ranklist.join')->middleware('auth');
-Route::delete('/ranklists/{id}/leave', [TrackerController::class, 'leaveRanklist'])->name('ranklist.leave')->middleware('auth');
+Route::post('/ranklists/{rankList}/join', [TrackerController::class, 'joinRankList'])->name('ranklist.join')->middleware('auth');
+Route::delete('/ranklists/{rankList}/leave', [TrackerController::class, 'leaveRankList'])->name('ranklist.leave')->middleware('auth');

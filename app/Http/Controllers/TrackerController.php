@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Visibility;
+use App\Models\RankList;
 use App\Models\Tracker;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
@@ -79,12 +80,11 @@ class TrackerController extends Controller
     /**
      * Join a ranklist
      */
-    public function joinRanklist($id)
+    public function joinRankList(RankList $rankList)
     {
-        $ranklist = \App\Models\RankList::findOrFail($id);
 
         // Check if user is already part of this ranklist
-        if ($ranklist->users()->where('user_id', auth()->id())->exists()) {
+        if ($rankList->users()->where('user_id', auth()->id())->exists()) {
             Notification::make()
                 ->title('You are already part of this ranklist.')
                 ->info()
@@ -94,7 +94,7 @@ class TrackerController extends Controller
         }
 
         // Add user to ranklist with initial score of 0
-        $ranklist->users()->attach(auth()->id(), ['score' => 0]);
+        $rankList->users()->attach(auth()->id(), ['score' => 0]);
 
         Notification::make()
             ->title('You have successfully joined the ranklist.')
@@ -107,12 +107,11 @@ class TrackerController extends Controller
     /**
      * Leave a ranklist
      */
-    public function leaveRanklist($id)
+    public function leaveRankList(RankList $rankList)
     {
-        $ranklist = \App\Models\RankList::findOrFail($id);
 
         // Check if user is part of this ranklist
-        if (!$ranklist->users()->where('user_id', auth()->id())->exists()) {
+        if (!$rankList->users()->where('user_id', auth()->id())->exists()) {
             Notification::make()
                 ->title('You are not part of this ranklist.')
                 ->info()
@@ -122,7 +121,7 @@ class TrackerController extends Controller
         }
 
         // Remove user from ranklist
-        $ranklist->users()->detach(auth()->id());
+        $rankList->users()->detach(auth()->id());
 
         Notification::make()
             ->title('You have successfully left the ranklist.')
