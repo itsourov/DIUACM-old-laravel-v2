@@ -30,7 +30,9 @@
             {{-- Combined ranklist navigation and info --}}
             <div class="mb-6 bg-white dark:bg-slate-800 shadow-sm rounded-xl p-5 border border-slate-200 dark:border-slate-700">
                 <div class="flex flex-col space-y-4">
-                    {{-- Ranklist navigation tabs --}}
+                   @if (count($allRankListKeywords) > 1)
+              
+                        {{-- Ranklist navigation tabs --}}
                     <div class="flex flex-wrap gap-2">
                         @foreach ($allRankListKeywords as $rankListKeyword)
                             <a href="{{ route('tracker.show', [$tracker->slug, 'keyword' => $rankListKeyword]) }}"
@@ -40,6 +42,8 @@
                         @endforeach
                     </div>
                     
+                   @endif
+                   
                     {{-- Divider --}}
                     @if ($ranklist->description)
                         <div class="border-t border-slate-200 dark:border-slate-700"></div>
