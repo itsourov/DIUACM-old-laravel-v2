@@ -3,7 +3,13 @@
         <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Create an Account</h1>
-                <p class="text-sm text-slate-600 dark:text-slate-300">Join our community using your DIU email</p>
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                    Already have an account?
+                    <a class="font-medium text-blue-600 hover:text-blue-700 underline-offset-2 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                       href="{{ route('login') }}">
+                        Sign in here
+                    </a>
+                </p>
                 <div class="mx-auto w-16 h-1 bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 rounded-full my-4"></div>
             </div>
 
@@ -26,13 +32,6 @@
                         <path d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z" fill="#EB4335"/>
                     </svg>
                     Register using Google
-                </a>
-            </div>
-
-            <div class="text-center text-sm text-slate-600 dark:text-slate-400">
-                Already have an account?
-                <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-700 underline-offset-2 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
-                    Sign in
                 </a>
             </div>
         </div>
