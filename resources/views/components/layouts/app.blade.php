@@ -11,7 +11,7 @@
     <meta name="description" content="We do competitive programming, and ICPC is our main focus.">
 
 
-    @filamentStyles
+    {{-- @filamentStyles --}}
     <!-- Scripts and Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
