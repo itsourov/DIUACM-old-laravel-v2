@@ -1,25 +1,40 @@
 <x-app-layout>
-    <div class="flex flex-col items-center justify-center p-8 space-y-6">
-        <h1 class="text-2xl font-semibold text-center">Create an Account</h1>
+    <div class="container mx-auto px-4 py-16">
+        <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Create an Account</h1>
+                <p class="text-sm text-slate-600 dark:text-slate-300">Join our community using your DIU email</p>
+                <div class="mx-auto w-16 h-1 bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 rounded-full my-4"></div>
+            </div>
 
-        <div class="w-full max-w-sm">
-            <a href="{{ route('auth.google.redirect') }}"
-               class="flex items-center justify-center w-full px-4 py-2 space-x-2 text-sm font-medium text-gray-700 transition-colors duration-200 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
-                <span>Sign up with Google</span>
-            </a>
-        </div>
+            <div class="bg-blue-50 dark:bg-slate-700/50 border border-blue-100 dark:border-slate-600 rounded-lg p-4 mb-6">
+                <h3 class="font-medium text-blue-800 dark:text-blue-300 mb-2">Important Registration Instructions:</h3>
+                <ul class="text-sm text-slate-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+                    <li>Use your DIU email address (@diu.edu.bd or @s.diu.edu.bd)</li>
+                    <li>Set a password for your account after creating a new account</li>
+                    <li>Keep your credentials safe - you'll need them for contest attendance</li>
+                </ul>
+                <p class="mt-2 text-xs text-slate-600 dark:text-slate-400 italic">Note: Personal Gmail accounts are not accepted. You must use your official DIU email address for registration.</p>
+            </div>
+            
+            <div class="mb-6">
+                <a href="{{ route('auth.google.redirect') }}" class="w-full py-3 px-4 flex justify-center items-center gap-3 text-sm font-medium rounded-lg border border-slate-200 bg-white text-slate-800 shadow-sm hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:bg-slate-600 transition-colors">
+                    <svg class="w-5 h-5" viewBox="0 0 46 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M46 24.0287C46 22.09 45.8533 20.68 45.5013 19.2112H23.4694V27.9356H36.4069C36.1429 30.1094 34.7347 33.37 31.5957 35.5731L31.5663 35.8669L38.5191 41.2719L38.9885 41.3306C43.4477 37.2181 46 31.1669 46 24.0287Z" fill="#4285F4"/>
+                        <path d="M23.4694 47C29.8061 47 35.1161 44.9144 39.0179 41.3012L31.625 35.5437C29.6301 36.9244 26.9898 37.8937 23.4987 37.8937C17.2793 37.8937 12.0281 33.7812 10.1505 28.1412L9.88649 28.1706L2.61097 33.7812L2.52296 34.0456C6.36608 41.7125 14.287 47 23.4694 47Z" fill="#34A853"/>
+                        <path d="M10.1212 28.1413C9.62245 26.6725 9.32908 25.1156 9.32908 23.5C9.32908 21.8844 9.62245 20.3275 10.0918 18.8588V18.5356L2.75765 12.8369L2.52296 12.9544C0.909439 16.1269 0 19.7106 0 23.5C0 27.2894 0.909439 30.8731 2.49362 34.0456L10.1212 28.1413Z" fill="#FBBC05"/>
+                        <path d="M23.4694 9.07688C27.8699 9.07688 30.8622 10.9863 32.5344 12.5725L39.1645 6.11C35.0867 2.32063 29.8061 0 23.4694 0C14.287 0 6.36607 5.2875 2.49362 12.9544L10.0918 18.8588C11.9987 13.1894 17.25 9.07688 23.4694 9.07688Z" fill="#EB4335"/>
+                    </svg>
+                    Register using Google
+                </a>
+            </div>
 
-        <div class="text-sm text-center text-gray-600">
-            Already have an account?
-            <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                Sign in
-            </a>
+            <div class="text-center text-sm text-slate-600 dark:text-slate-400">
+                Already have an account?
+                <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-700 underline-offset-2 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
+                    Sign in
+                </a>
+            </div>
         </div>
     </div>
 </x-app-layout>

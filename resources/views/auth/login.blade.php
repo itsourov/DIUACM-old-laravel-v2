@@ -1,91 +1,75 @@
 <x-app-layout>
-    <div class="container mx-auto px-2 py-7">
-        <card>
-            <div class="text-center">
-                <h1
-                        class="block text-2xl font-bold text-gray-800 dark:text-white">
-                    Sign in
-                </h1>
-                <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+    <div class="container mx-auto px-4 py-16">
+        <div class="max-w-md mx-auto bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Sign in</h1>
+                <p class="text-sm text-slate-600 dark:text-slate-400">
                     Don't have an account yet?
-                    <a
-                            class="font-medium text-blue-600 decoration-2 hover:underline dark:text-blue-500"
-                            href="{{ route("register") }}">
+                    <a class="font-medium text-blue-600 hover:text-blue-700 underline-offset-2 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                       href="{{ route("register") }}">
                         Sign up here
                     </a>
                 </p>
+                <div class="mx-auto w-16 h-1 bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300 rounded-full my-4"></div>
             </div>
 
-            <div class="mt-5">
+            <div class="mb-6">
                 <x-auth.google-login-button/>
 
-                <div
-                        class="flex items-center py-3 text-xs uppercase text-gray-400 before:me-6 before:flex-1 before:border-t before:border-gray-200 after:ms-6 after:flex-1 after:border-t after:border-gray-200 dark:text-neutral-500 dark:before:border-neutral-600 dark:after:border-neutral-600">
+                <div class="flex items-center py-3 text-xs uppercase text-slate-400 before:me-6 before:flex-1 before:border-t before:border-slate-200 after:ms-6 after:flex-1 after:border-t after:border-slate-200 dark:text-slate-500 dark:before:border-slate-700 dark:after:border-slate-700">
                     Or
                 </div>
-
-                <!-- Form -->
-                <form method="POST" action="{{ route("login") }}">
-                    @csrf
-                    <div class="grid gap-y-4">
-                        <x-form.input
-                                name="login"
-                                label="Username or Email"
-                                type="text"
-                                :value="old('login')"
-                                placeholder="Enter your username or email"
-                                required
-                                autofocus
-                                autocomplete="username"/>
-
-                        <div class="flex items-center justify-between mb-1">
-                            <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                                Password
-                            </label>
-
-                            @if (Route::has("password.request"))
-                                <a
-                                        class="text-sm font-medium text-blue-600 decoration-2 hover:underline"
-                                        href="{{ route("password.request") }}">
-                                    Forgot password?
-                                </a>
-                            @endif
-                        </div>
-
-                        <x-form.input
-                                name="password"
-                                label=""
-                                type="password"
-                                placeholder="Enter your password"
-                                required
-                                autocomplete="current-password"/>
-
-                        <!-- Checkbox -->
-                        <div class="flex items-center">
-                            <div class="flex">
-                                <input
-                                        id="remember-me"
-                                        name="remember"
-                                        type="checkbox"
-                                        class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-gray-800"/>
-                            </div>
-                            <div class="ms-3">
-                                <label
-                                        for="remember-me"
-                                        class="text-sm dark:text-white">
-                                    Remember me
-                                </label>
-                            </div>
-                        </div>
-                        <!-- End Checkbox -->
-
-                        <x-button type="submit" variant="primary" class="py-3">
-                            Sign in
-                        </x-button>
-                    </div>
-                </form>
-                <!-- End Form -->
             </div>
-        </card>
+
+            <!-- Form -->
+            <form method="POST" action="{{ route("login") }}">
+                @csrf
+                <div class="grid gap-y-5">
+                    <x-form.input
+                            name="login"
+                            label="Username or Email"
+                            type="text"
+                            :value="old('login')"
+                            placeholder="Enter your username or email"
+                            required
+                            autofocus
+                            autocomplete="username"/>
+
+                  
+
+                    <x-form.input
+                            name="password"
+                            label="Password"
+                            type="password"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"/>
+
+                    <!-- Checkbox -->
+                    <div class="flex items-center">
+                        <div class="flex">
+                            <input
+                                    id="remember-me"
+                                    name="remember"
+                                    type="checkbox"
+                                    class="mt-0.5 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-700 dark:checked:border-blue-500 dark:checked:bg-blue-500 dark:focus:ring-offset-slate-800"/>
+                        </div>
+                        <div class="ms-3">
+                            <label
+                                    for="remember-me"
+                                    class="text-sm text-slate-700 dark:text-slate-300">
+                                Remember me
+                            </label>
+                        </div>
+                    </div>
+                    <!-- End Checkbox -->
+
+                    <x-button type="submit" variant="primary" class="py-3 mt-2">
+                        Sign in
+                    </x-button>
+                </div>
+            </form>
+            <!-- End Form -->
+        </div>
     </div>
 </x-app-layout>
