@@ -27,7 +27,7 @@
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.outside="open = false" class="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                             @if(auth()->user()->getFirstMediaUrl('avatar'))
-                                <img src="{{ auth()->user()->getFirstMediaUrl('avatar') }}" alt="{{ auth()->user()->name }}" class="h-8 w-8 rounded-full object-cover border border-slate-200 dark:border-slate-700">
+                                <img src="{{ auth()->user()->getFirstMediaUrl('avatar','preview') }}" alt="{{ auth()->user()->name }}" class="h-8 w-8 rounded-full object-cover border border-slate-200 dark:border-slate-700">
                             @else
                                 <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold">
                                     {{ substr(auth()->user()->name, 0, 1) }}
