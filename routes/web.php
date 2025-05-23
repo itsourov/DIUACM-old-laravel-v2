@@ -47,3 +47,5 @@ Route::get('/trackers/{slug}', [TrackerController::class, 'show'])->name('tracke
 // Ranklist routes
 Route::post('/ranklists/{rankList}/join', [TrackerController::class, 'joinRankList'])->name('ranklist.join')->middleware('auth');
 Route::delete('/ranklists/{rankList}/leave', [TrackerController::class, 'leaveRankList'])->name('ranklist.leave')->middleware('auth');
+
+require __DIR__.'/auth.php';

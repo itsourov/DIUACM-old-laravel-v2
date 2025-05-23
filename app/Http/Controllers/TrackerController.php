@@ -50,7 +50,7 @@ class TrackerController extends Controller
             ->orderBy('order')
             ->first();
 
-        if (!$ranklist) {
+        if (! $ranklist) {
             abort(404, 'No rank lists available for this tracker');
         }
 
@@ -89,6 +89,7 @@ class TrackerController extends Controller
                 ->title('You are already part of this ranklist.')
                 ->info()
                 ->send();
+
             return back();
 
         }
@@ -111,7 +112,7 @@ class TrackerController extends Controller
     {
 
         // Check if user is part of this ranklist
-        if (!$rankList->users()->where('user_id', auth()->id())->exists()) {
+        if (! $rankList->users()->where('user_id', auth()->id())->exists()) {
             Notification::make()
                 ->title('You are not part of this ranklist.')
                 ->info()
