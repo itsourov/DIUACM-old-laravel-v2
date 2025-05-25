@@ -68,13 +68,29 @@ class TrackerController extends Controller
                 $query->whereIn('event_id', $ranklist->events->pluck('id'));
             },
             'events' => function ($query) {
-                $query->select('events.id', 'title', 'starting_at')
+                $query->select('events.id', 'title', 'starting_at', 'open_for_attendance', 'strict_attendance')
                     ->withPivot('weight')
                     ->orderBy('starting_at', 'desc');
             },
+            'events.attendedUsers' => function ($query) {
+                // Load attendance data for all events - we'll filter later
+                $query->select('users.id');
+            },
         ]);
 
-        return view('pages.trackers.show', compact('tracker', 'ranklist', 'allRankListKeywords'));
+        // Create attendance lookup map for efficient checking
+        $attendanceMap = [];
+        if ($ranklist->consider_strict_attendance) {
+            foreach ($ranklist->events as $event) {
+                if ($event->open_for_attendance && $event->strict_attendance) {
+                    foreach ($event->attendedUsers as $attendee) {
+                        $attendanceMap[$attendee->id . '_' . $event->id] = true;
+                    }
+                }
+            }
+        }
+
+        return view('pages.trackers.show', compact('tracker', 'ranklist', 'allRankListKeywords', 'attendanceMap'));
     }
 
     /**

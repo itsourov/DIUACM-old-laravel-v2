@@ -197,6 +197,17 @@
                                                         class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 py-0.5 bg-blue-50/80 text-blue-700 ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-800/60">
                                                                 W: {{ $event->pivot->weight ?? 1 }}
                                                             </span>
+                                                    @if($ranklist->consider_strict_attendance && $event->open_for_attendance && $event->strict_attendance)
+                                                        <span
+                                                            class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 py-0.5 bg-orange-50/80 text-orange-700 ring-orange-600/20 dark:bg-orange-900/20 dark:text-orange-400 dark:ring-orange-800/60"
+                                                            title="Strict attendance enforced - users without attendance will have solves counted as upsolves">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3">
+                                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                                                                <path d="m9 12 2 2 4-4"></path>
+                                                            </svg>
+                                                            SA
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </th>
@@ -253,6 +264,15 @@
                                         @foreach ($ranklist->events as $event)
                                             @php
                                                 $solvestat = $user->solveStats->where('event_id', $event->id)->first();
+                                                
+                                                // Check if strict attendance is enforced for this event and ranklist
+                                                $strictAttendanceEnforced = $ranklist->consider_strict_attendance && 
+                                                                          $event->open_for_attendance && 
+                                                                          $event->strict_attendance;
+                                                
+                                                // Check if user has attendance for this event
+                                                $hasAttendance = !$strictAttendanceEnforced || 
+                                                               isset($attendanceMap[$user->id . '_' . $event->id]);
                                             @endphp
                                             <td class="px-4 py-2 whitespace-nowrap">
                                                 <div class="flex gap-2 w-max">
@@ -270,7 +290,30 @@
                                                                         Absent
                                                                     </span>
                                                                 </span>
+                                                    @elseif($strictAttendanceEnforced && !$hasAttendance)
+                                                        {{-- User has solve stats but no attendance - show as absent and treat all solves as upsolves --}}
+                                                        <span
+                                                            class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset bg-red-50/80 text-red-700 ring-red-600/20 dark:bg-red-900/20 dark:text-red-400 dark:ring-red-800/60 w-fit px-2 py-0.5">
+                                                                    <span class="truncate">
+                                                                        Absent
+                                                                    </span>
+                                                                </span>
+                                                        
+                                                        @php
+                                                            $totalUpsolves = $solvestat->solve_count + ($solvestat->upsolve_count ?? 0);
+                                                        @endphp
+                                                        
+                                                        @if ($totalUpsolves > 0)
+                                                            <span
+                                                                class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset bg-gray-50/80 text-gray-700 ring-gray-600/20 dark:bg-gray-900/20 dark:text-gray-400 dark:ring-gray-800/60 w-fit px-2 py-0.5">
+                                                                        <span class="truncate">
+                                                                            {{ $totalUpsolves }}
+                                                                            Upsolve
+                                                                        </span>
+                                                                    </span>
+                                                        @endif
                                                     @else
+                                                        {{-- Normal case - user has attendance or strict attendance is not enforced --}}
                                                         <span
                                                             class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset bg-green-50/80 text-green-700 ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-800/60 w-fit px-2 py-0.5">
                                                                     <span class="truncate">
@@ -319,6 +362,13 @@
                                         class="font-medium">{{ $ranklist->weight_of_upsolve }}</span></li>
 
                                 <li>Event weights are displayed under each event title</li>
+                                
+                                @if($ranklist->consider_strict_attendance)
+                                    <li>
+                                        <span class="font-medium text-orange-600 dark:text-orange-400">Strict Attendance:</span> 
+                                        Events marked with "SA" require attendance. Users without attendance will have their solves counted as upsolves only.
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
