@@ -2,6 +2,30 @@
     <!-- Cropper.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     
+    @push('scripts')
+    <script>
+        // Make sure FilamentNotification is available
+        if (typeof window.FilamentNotification === 'undefined') {
+            console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
+        }
+    </script>
+    @endpush
+    
+    @pushOnce('scripts')
+    <script>
+        // Make sure FilamentNotification is available
+        if (typeof window.FilamentNotification === 'un                } catch (error) {
+                    console.error('Form submission error:', error);
+                    showNotification('Processing Error', 'Error processing the form. Please try again.', 'error');
+                    loadingSpinner.classList.add('hidden');
+                    submitText.textContent = 'Update Profile';
+                    submitBtn.disabled = false;
+                }{
+            console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
+        }
+    </script>
+    @endPushOnce
+    
     <div class="container mx-auto px-4 py-8 lg:py-16">
         {{-- Header section --}}
         <div class="mb-8 lg:mb-12 text-center">
@@ -308,38 +332,30 @@
         const processingIndicator = document.getElementById('processingIndicator');
         const processingText = document.getElementById('processingText');
         
-        // Helper function to show user-friendly notifications
+        // Helper function to show Filament notifications
         function showNotification(title, message, type = 'error') {
-            // Create a simple notification (you can replace this with your notification system)
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg ${
-                type === 'error' ? 'bg-red-100 border border-red-200 text-red-800' : 
-                type === 'success' ? 'bg-green-100 border border-green-200 text-green-800' :
-                'bg-blue-100 border border-blue-200 text-blue-800'
-            }`;
+            // Create a Filament notification
+            const notification = new FilamentNotification()
+                .title(title);
+                
+            // Add body if provided
+            if (message) {
+                notification.body(message);
+            }
             
-            notification.innerHTML = `
-                <div class="flex items-start">
-                    <div class="flex-1">
-                        <h4 class="font-medium">${title}</h4>
-                        <p class="text-sm mt-1">${message}</p>
-                    </div>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-400 hover:text-gray-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-            `;
+            // Set notification type
+            if (type === 'success') {
+                notification.success();
+            } else if (type === 'error') {
+                notification.danger();
+            } else if (type === 'info') {
+                notification.info();
+            } else if (type === 'warning') {
+                notification.warning();
+            }
             
-            document.body.appendChild(notification);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
-                }
-            }, 5000);
+            // Send the notification
+            notification.send();
         }
         
         // Open file dialog
@@ -476,7 +492,7 @@
                             avatarPlaceholder.classList.add('hidden');
                         }
                         
-                        showNotification('Success', `Image processed successfully! Final size: ${finalSize}MB`, 'success');
+                        showNotification('Image Processed', `Image processed successfully! Final size: ${finalSize}MB`, 'success');
                         
                         // Re-enable button and hide modal
                         applyCrop.disabled = false;
@@ -578,13 +594,15 @@
         
         // Handle form submission
         profileForm.addEventListener('submit', function(e) {
+            // Always prevent default form submission and handle via AJAX for consistency
+            e.preventDefault();
+            
             // Show loading state
             loadingSpinner.classList.remove('hidden');
             submitText.textContent = 'Updating...';
             submitBtn.disabled = true;
             
-            // If we have a cropped image OR we're removing the avatar, handle via AJAX
-            if (avatarCropped.value || document.getElementById('remove-avatar').value === '1') {
+            // Always handle via AJAX for consistency, whether we're updating avatar or not
                 try {
                     // Create form data
                     const formData = new FormData(profileForm);
@@ -604,11 +622,10 @@
                         formData.set('avatar', blob, 'avatar.jpg');
                     }
                     
-                    // Always ensure the remove_avatar flag is included
-                    if (document.getElementById('remove-avatar').value === '1') {
-                        console.log('Setting remove_avatar flag in form data');
-                        formData.set('remove_avatar', '1');
-                    }
+                    // Always ensure the remove_avatar flag is included with the correct value
+                    const removeAvatarValue = document.getElementById('remove-avatar').value;
+                    console.log('Remove avatar value:', removeAvatarValue);
+                    formData.set('remove_avatar', removeAvatarValue);
                     
                     // Debug what's being submitted
                     console.log('Submitting form with remove_avatar:', formData.get('remove_avatar'));
@@ -623,30 +640,29 @@
                         }
                     }).then(response => {
                         if (response.ok) {
-                            showNotification('Success', 'Profile updated successfully!', 'success');
+                            showNotification('Profile Updated', 'Your profile has been updated successfully!', 'success');
                             setTimeout(() => window.location.reload(), 1000);
                         } else {
-                            throw new Error('Upload failed');
+                            return response.text().then(text => {
+                                console.error('Server response:', text);
+                                throw new Error('Update failed');
+                            });
                         }
                     }).catch(error => {
                         console.error('Error:', error);
-                        showNotification('Upload Error', 'Failed to update profile. Please try again.', 'error');
+                        showNotification('Update Failed', 'Failed to update your profile. Please try again.', 'error');
                         // Reset form state
                         loadingSpinner.classList.add('hidden');
                         submitText.textContent = 'Update Profile';
                         submitBtn.disabled = false;
                     });
-                    
-                    e.preventDefault();
                 } catch (error) {
                     console.error('Form submission error:', error);
                     showNotification('Processing Error', 'Error processing the form. Please try again.', 'error');
                     loadingSpinner.classList.add('hidden');
                     submitText.textContent = 'Update Profile';
                     submitBtn.disabled = false;
-                    e.preventDefault();
                 }
-            }
         });
         
         // Close modal on outside click
@@ -660,6 +676,15 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && !cropperModal.classList.contains('hidden')) {
                 hideCropperModal();
+            }
+        });
+    </script>
+    
+    <script>
+        // Check if FilamentNotification is available
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.FilamentNotification === 'undefined') {
+                console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
             }
         });
     </script>
