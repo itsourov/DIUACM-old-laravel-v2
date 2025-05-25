@@ -109,6 +109,7 @@ class ImportFromOldWebsite extends Command
 
                 try {
                     $newUser->addMediaFromUrl($user['image'])
+                        ->preservingOriginal(false)
                         ->toMediaCollection('avatar', 'avatar');
                 } catch (FileDoesNotExist|FileIsTooBig|FileCannotBeAdded $e) {
                     $this->error("Failed to add media for user {$user['email']}: {$e->getMessage()}");
