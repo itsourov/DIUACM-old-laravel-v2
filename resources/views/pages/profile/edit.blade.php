@@ -2,30 +2,7 @@
     <!-- Cropper.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     
-    @push('scripts')
-    <script>
-        // Make sure FilamentNotification is available
-        if (typeof window.FilamentNotification === 'undefined') {
-            console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
-        }
-    </script>
-    @endpush
-    
-    @pushOnce('scripts')
-    <script>
-        // Make sure FilamentNotification is available
-        if (typeof window.FilamentNotification === 'un                } catch (error) {
-                    console.error('Form submission error:', error);
-                    showNotification('Processing Error', 'Error processing the form. Please try again.', 'error');
-                    loadingSpinner.classList.add('hidden');
-                    submitText.textContent = 'Update Profile';
-                    submitBtn.disabled = false;
-                }{
-            console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
-        }
-    </script>
-    @endPushOnce
-    
+  
     <div class="container mx-auto px-4 py-8 lg:py-16">
         {{-- Header section --}}
         <div class="mb-8 lg:mb-12 text-center">
@@ -680,12 +657,5 @@
         });
     </script>
     
-    <script>
-        // Check if FilamentNotification is available
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof window.FilamentNotification === 'undefined') {
-                console.error('FilamentNotification is not defined. Make sure @livewire("notifications") is included in your layout.');
-            }
-        });
-    </script>
+   
 </x-app-layout>
