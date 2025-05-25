@@ -62,6 +62,8 @@ class RankListResource extends Resource
                             ->numeric(),
                         Forms\Components\Toggle::make('is_active')
                             ->required(),
+                        Forms\Components\Toggle::make('consider_strict_attendance')
+                            ->required(),
                     ]),
             ]);
     }

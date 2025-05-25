@@ -15,6 +15,7 @@ class RankList extends Model
         'weight_of_upsolve',
         'order',
         'is_active',
+        'consider_strict_attendance',
     ];
 
     public function tracker(): BelongsTo
@@ -37,6 +38,7 @@ class RankList extends Model
     {
         return [
             'is_active' => 'boolean',
+            'consider_strict_attendance' => 'boolean',
         ];
     }
 }

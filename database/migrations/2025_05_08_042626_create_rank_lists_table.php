@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->boolean('is_active')
                 ->default(true);
+            $table->boolean('consider_strict_attendance')
+                ->default(true);
             $table->timestamps();
 
             $table->unique(['keyword', 'tracker_id']);
