@@ -37,7 +37,6 @@ class ProfileController extends Controller
         
         // Check if avatar should be removed
         if ($request->input('remove_avatar') === '1') {
-            \Log::info('Removing avatar for user: ' . $user->id);
             $user->clearMediaCollection('avatar');
             unset($validated['avatar']);
             unset($validated['remove_avatar']);
