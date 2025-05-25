@@ -53,15 +53,7 @@
                                     <span>My Profile</span>
                                 </div>
                             </a>
-                            <a href="{{ route('settings') }}" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
-                                <div class="flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
-                                        <path d="m19.947 17.482-.003-.003A9 9 0 1 0 6.057 17.482h0l.003.003.074.098.132.17c.439.55.957 1.066 1.572 1.483a9 9 0 0 0 14.713-1.483l.132-.17.073-.098Z"></path>
-                                    </svg>
-                                    <span>Settings</span>
-                                </div>
-                            </a>
+                         
                             <form action="{{ route('logout') }}" method="POST" class="block">
                                 @csrf
                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
@@ -207,13 +199,7 @@
                         </svg>
                         My Profile
                     </a>
-                    <a href="{{ route('settings') }}" class="{{ request()->is('settings') ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700' }} flex items-center gap-3 px-3 py-2 rounded-md font-medium mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
-                            <path d="m19.947 17.482-.003-.003A9 9 0 1 0 6.057 17.482h0l.003.003.074.098.132.17c.439.55.957 1.066 1.572 1.483a9 9 0 0 0 14.713-1.483l.132-.17.073-.098Z"></path>
-                        </svg>
-                        Settings
-                    </a>
+                
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">
