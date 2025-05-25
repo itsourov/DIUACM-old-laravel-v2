@@ -24,7 +24,7 @@ class GoogleLoginController extends Controller
                 $new_user = User::create([
                     'name' => $googleUser->getName(),
                     'username' => $username,
-                    'email' => null,
+                    'email' => $googleUser->getEmail(),
                     'password' => bcrypt($password),
                 ]);
 
