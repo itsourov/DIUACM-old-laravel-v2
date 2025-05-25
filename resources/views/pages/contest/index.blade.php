@@ -47,7 +47,7 @@
                                                 <line x1="8" x2="8" y1="2" y2="6"></line>
                                                 <line x1="3" x2="21" y1="10" y2="10"></line>
                                             </svg>
-                                            {{ $contest->date->format('M d, Y') }}
+                                            {{ $contest->date?->format('M d, Y') }}
                                         </span>
                                     </div>
                                     <h2 class="text-xl font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors tracking-tight">
@@ -73,7 +73,7 @@
                                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                         </svg>
-                                        <span class="font-medium">{{ $contest->teams_count }}</span> 
+                                        <span class="font-medium">{{ $contest->teams_count }}</span>
                                         <span class="text-sm">teams</span>
                                     </div>
                                     <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full w-9 h-9 flex items-center justify-center shadow-sm group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
@@ -103,9 +103,9 @@
 
             {{-- Pagination --}}
             <div class="mt-12">
-                
+
                     {{ $contests->links() }}
-        
+
             </div>
         </div>
     </div>

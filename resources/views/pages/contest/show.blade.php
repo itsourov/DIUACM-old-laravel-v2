@@ -42,7 +42,7 @@
                                         <line x1="8" x2="8" y1="2" y2="6"></line>
                                         <line x1="3" x2="21" y1="10" y2="10"></line>
                                     </svg>
-                                    {{ $contest->date->format('M d, Y') }}
+                                    {{ $contest->date?->format('M d, Y') }}
                                 </span>
                             </div>
                             <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
@@ -132,7 +132,7 @@
                             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all duration-300">
                                 <div class="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 p-5 flex justify-between items-center">
                                     <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $team->name }}</h3>
-                                    
+
                                     @if($team->rank)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                                             @if($team->rank == 1)
@@ -153,7 +153,7 @@
                                         </span>
                                     @endif
                                 </div>
-                                
+
                                 <div class="p-5">
                                     <div class="space-y-3">
                                         <h4 class="text-sm font-medium text-slate-500 dark:text-slate-400">Team Members:</h4>
@@ -161,8 +161,8 @@
                                             <div class="flex items-center gap-3">
                                                 <div class="relative h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 shadow-sm ring-1 ring-slate-200/60 dark:ring-slate-700/60">
                                                     @if($member->getMedia('avatar')->isNotEmpty())
-                                                        <img src="{{ $member->getFirstMediaUrl('avatar', 'preview') }}" 
-                                                            alt="{{ $member->name }}" 
+                                                        <img src="{{ $member->getFirstMediaUrl('avatar', 'preview') }}"
+                                                            alt="{{ $member->name }}"
                                                             class="h-full w-full object-cover">
                                                     @else
                                                         <div class="h-full w-full flex items-center justify-center text-slate-500 dark:text-slate-400 font-medium text-xs">
@@ -241,8 +241,8 @@
                         @foreach($contest->gallery->getMedia('gallery-images')->take(8) as $image)
                             <a href="{{ $image->getUrl() }}" class="gallery-item" data-fancybox="gallery" data-caption="{{ $image->custom_properties['caption'] ?? '' }}">
                                 <div class="aspect-square rounded-2xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700 group relative hover:shadow-lg transition-all duration-300">
-                                    <img 
-                                        src="{{ $image->getUrl() }}" 
+                                    <img
+                                        src="{{ $image->getUrl() }}"
                                         alt="{{ $image->custom_properties['caption'] ?? $contest->gallery->title }}"
                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     >
@@ -264,7 +264,7 @@
                             </a>
                         @endforeach
                     </div>
-                    
+
                     @if($contest->gallery)
                         <div class="mt-6 text-center">
                             <x-button href="{{ route('gallery.show', $contest->gallery->slug) }}" variant="secondary" size="md">
@@ -291,7 +291,7 @@
             Fancybox.bind('[data-fancybox="gallery"]', {
                 // Options here
             });
-            
+
             // Initialize Fancybox for gallery items
             Fancybox.bind(".gallery-item", {
                 groupAll: true,
