@@ -36,6 +36,8 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->defaultSort('username', 'desc')
+
             ->columns([
                 Tables\Columns\TextColumn::make('score')
                     ->badge()
@@ -47,15 +49,25 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->preloadRecordSelect()
+                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                        $action->getRecordSelect(),
+                        Forms\Components\TextInput::make('score')
+                            ->numeric()
+                            ->default(0)
+                            ->step(0.01)
+                            ->minValue(0.0)
+                            ->required(),
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

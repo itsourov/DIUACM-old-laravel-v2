@@ -10,6 +10,11 @@ class EditRankList extends EditRecord
 {
     protected static string $resource = RankListResource::class;
 
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

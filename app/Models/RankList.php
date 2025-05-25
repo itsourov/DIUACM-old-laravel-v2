@@ -31,7 +31,8 @@ class RankList extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'rank_list_user', 'rank_list_id', 'user_id')->withPivot('score');
+        return $this->belongsToMany(User::class, 'rank_list_user', 'rank_list_id', 'user_id')
+            ->withPivot('score');
     }
 
     protected function casts(): array
