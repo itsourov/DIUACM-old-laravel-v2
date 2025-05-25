@@ -56,6 +56,7 @@
                                             class="hidden"
                                         >
                                         <input type="hidden" name="avatar" id="avatar-cropped">
+                                        <input type="hidden" name="remove_avatar" id="remove-avatar" value="0">
                                         
                                         <button 
                                             type="button" 
@@ -570,6 +571,8 @@
                 avatarPlaceholder.classList.remove('hidden');
             }
             avatarInput.value = '';
+            // Set the remove_avatar flag to 1
+            document.getElementById('remove-avatar').value = '1';
             showNotification('Avatar Removed', 'Profile photo has been removed.', 'success');
         });
         
@@ -580,24 +583,35 @@
             submitText.textContent = 'Updating...';
             submitBtn.disabled = true;
             
-            // If we have a cropped image, convert it to a file for form submission
-            if (avatarCropped.value) {
+            // If we have a cropped image OR we're removing the avatar, handle via AJAX
+            if (avatarCropped.value || document.getElementById('remove-avatar').value === '1') {
                 try {
-                    // Create a hidden file input with the cropped image
-                    const dataURL = avatarCropped.value;
-                    const byteString = atob(dataURL.split(',')[1]);
-                    const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
-                    const blob = new Blob([ab], { type: mimeString });
-                    
                     // Create form data
                     const formData = new FormData(profileForm);
                     formData.delete('avatar_input');
-                    formData.set('avatar', blob, 'avatar.jpg');
+                    
+                    // If we have an image to upload
+                    if (avatarCropped.value && document.getElementById('remove-avatar').value !== '1') {
+                        const dataURL = avatarCropped.value;
+                        const byteString = atob(dataURL.split(',')[1]);
+                        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+                        const ab = new ArrayBuffer(byteString.length);
+                        const ia = new Uint8Array(ab);
+                        for (let i = 0; i < byteString.length; i++) {
+                            ia[i] = byteString.charCodeAt(i);
+                        }
+                        const blob = new Blob([ab], { type: mimeString });
+                        formData.set('avatar', blob, 'avatar.jpg');
+                    }
+                    
+                    // Always ensure the remove_avatar flag is included
+                    if (document.getElementById('remove-avatar').value === '1') {
+                        console.log('Setting remove_avatar flag in form data');
+                        formData.set('remove_avatar', '1');
+                    }
+                    
+                    // Debug what's being submitted
+                    console.log('Submitting form with remove_avatar:', formData.get('remove_avatar'));
                     
                     // Submit via fetch
                     fetch(profileForm.action, {
@@ -605,6 +619,7 @@
                         body: formData,
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
                         }
                     }).then(response => {
                         if (response.ok) {

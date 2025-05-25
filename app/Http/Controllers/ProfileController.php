@@ -32,10 +32,18 @@ class ProfileController extends Controller
             'atcoder_handle' => ['nullable', 'string', 'max:255'],
             'vjudge_handle' => ['nullable', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp,bmp,tiff,svg', 'max:2048'], // 2MB max, more image types
+            'remove_avatar' => ['nullable', 'string'],
         ]);
         
+        // Check if avatar should be removed
+        if ($request->input('remove_avatar') === '1') {
+            \Log::info('Removing avatar for user: ' . $user->id);
+            $user->clearMediaCollection('avatar');
+            unset($validated['avatar']);
+            unset($validated['remove_avatar']);
+        }
         // Handle avatar upload validation
-        if ($request->hasFile('avatar')) {
+        elseif ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             
             // Check file size (2MB = 2048KB)
