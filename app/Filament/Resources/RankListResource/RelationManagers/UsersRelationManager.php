@@ -6,9 +6,11 @@ use App\Filament\Resources\UserResource;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Artisan;
 
 class UsersRelationManager extends RelationManager
 {
@@ -37,7 +39,6 @@ class UsersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->defaultSort('username', 'desc')
-
             ->columns([
                 Tables\Columns\TextColumn::make('score')
                     ->badge()
@@ -49,9 +50,26 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                Tables\Actions\Action::make('recalculateScores')
+                    ->label('Recalculate Scores')
+                    ->icon('heroicon-o-calculator')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Recalculate Ranklist Scores')
+                    ->modalDescription('Are you sure you want to recalculate scores for this ranklist? This may take a moment.')
+                    ->action(function () {
+                        // Call the console command to recalculate ranklist scores
+                        Artisan::call('app:recalculate-ranklist-score');
+
+                        Notification::make()
+                            ->title('Scores recalculated successfully')
+                            ->success()
+                            ->send();
+
+                    }),
                 Tables\Actions\AttachAction::make()
                     ->preloadRecordSelect()
-                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                    ->form(fn(Tables\Actions\AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Forms\Components\TextInput::make('score')
                             ->numeric()
