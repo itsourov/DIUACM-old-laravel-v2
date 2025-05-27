@@ -17,14 +17,29 @@ class GoogleLoginController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            $user = User::where('email', $googleUser->getEmail())->first();
+            // Validate that the email domain is either diu.edu.bd or s.diu.edu.bd
+            $email = $googleUser->getEmail();
+            $allowedDomains = ['diu.edu.bd', 's.diu.edu.bd'];
+            $domain = Str::after($email, '@');
+            
+            if (!in_array($domain, $allowedDomains)) {
+                Notification::make()
+                    ->title('Login Failed')
+                    ->body('You must use a DIU email address (@diu.edu.bd or @s.diu.edu.bd) to log in.')
+                    ->danger()
+                    ->send();
+                    
+                return redirect()->route('home');
+            }
+
+            $user = User::where('email', $email)->first();
             if (! $user) {
-                $username = Str::before($googleUser->getEmail(), '@');
+                $username = Str::before($email, '@');
                 $password = Str::random(10);
                 $new_user = User::create([
                     'name' => $googleUser->getName(),
                     'username' => $username,
-                    'email' => $googleUser->getEmail(),
+                    'email' => $email,
                     'password' => bcrypt($password),
                 ]);
 
