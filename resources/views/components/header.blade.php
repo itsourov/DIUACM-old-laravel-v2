@@ -11,13 +11,13 @@
             <!-- Navigation Links - Desktop -->
             <nav class="hidden md:ml-6 md:flex md:space-x-6">
                 <a href="/" class="{{ request()->is('/') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Home</a>
-                <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">About</a>
-                <a href="{{ route('blog.index') }}" class="{{ request()->is('blog') || request()->is('blog/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Blog</a>
                 <a href="{{ route('event.index') }}" class="{{ request()->is('events') || request()->is('events/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Events</a>
                 <a href="{{ route('contest.index') }}" class="{{ request()->is('contests') || request()->is('contests/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Contests</a>
                 <a href="{{ route('tracker.index') }}" class="{{ request()->is('trackers') || request()->is('trackers/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Trackers</a>
                 <a href="{{ route('programmer.index') }}" class="{{ request()->is('programmers') || request()->is('programmers/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Programmers</a>
+                <a href="{{ route('blog.index') }}" class="{{ request()->is('blog') || request()->is('blog/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Blog</a>
                 <a href="{{ route('gallery.index') }}" class="{{ request()->is('gallery') || request()->is('gallery/*') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Gallery</a>
+                <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">About</a>
                 <a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400' }} font-medium transition-colors">Contact</a>
             </nav>
 
@@ -37,7 +37,7 @@
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
                         </button>
-                        
+
                         <!-- Dropdown menu -->
                         <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10" style="display: none;">
                             <div class="px-4 py-2 border-b border-slate-200 dark:border-slate-700">
@@ -53,7 +53,7 @@
                                     <span>My Profile</span>
                                 </div>
                             </a>
-                         
+
                             <form action="{{ route('logout') }}" method="POST" class="block">
                                 @csrf
                                 <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">
@@ -105,7 +105,7 @@
                 </svg>
             </button>
         </div>
-        
+
         <div class="overflow-y-auto h-[calc(100vh-72px)]">
             <div class="px-4 py-5 space-y-3">
                 <a href="/" class="{{ request()->is('/') ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700' }} flex items-center gap-3 px-3 py-2 rounded-md font-medium">
@@ -199,7 +199,7 @@
                         </svg>
                         My Profile
                     </a>
-                
+
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="w-full text-left flex items-center gap-3 px-3 py-2 rounded-md font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">
