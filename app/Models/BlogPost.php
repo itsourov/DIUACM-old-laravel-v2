@@ -40,7 +40,15 @@ class BlogPost extends Model implements HasMedia
         $this
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
-            ->nonQueued();
+            ->queued();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('post-featured-images')
+            ->useFallbackUrl('/images/anonymous-user.webp')
+            ->useFallbackPath(public_path('/images/anonymous-user.webp'));
     }
 
     public function scopePublished(Builder $query)

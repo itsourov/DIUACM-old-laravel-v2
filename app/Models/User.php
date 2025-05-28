@@ -99,14 +99,14 @@ class User extends Authenticatable implements HasMedia, FilamentUser
         $this
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
-            ->nonQueued();
+            ->queued();
     }
 
     public function registerMediaCollections(): void
     {
         $this
             ->addMediaCollection('avatar')
-            ->useFallbackUrl('/images/anonymous-user.jpg')
-            ->useFallbackPath(public_path('/images/anonymous-user.jpg'));
+            ->useFallbackUrl('/images/anonymous-user.webp')
+            ->useFallbackPath(public_path('/images/anonymous-user.webp'));
     }
 }
