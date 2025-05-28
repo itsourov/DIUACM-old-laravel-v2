@@ -186,7 +186,7 @@
                                         <th scope="col"
                                             class="px-4 py-3 text-start text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap">
                                             <div class="flex flex-col gap-1">
-                                                <a href="{{ $event->event_link ?? '#' }}" target="_blank"
+                                                <a href="{{route('event.show',$event) }}" target="_blank"
                                                    class="max-w-52 overflow-hidden text-xs font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 truncate">
                                                     {{ $event->title }}
                                                 </a>
@@ -201,8 +201,13 @@
                                                         <span
                                                             class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 py-0.5 bg-orange-50/80 text-orange-700 ring-orange-600/20 dark:bg-orange-900/20 dark:text-orange-400 dark:ring-orange-800/60"
                                                             title="Strict attendance enforced - users without attendance will have solves counted as upsolves">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3">
-                                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12"
+                                                                 height="12" viewBox="0 0 24 24" fill="none"
+                                                                 stroke="currentColor" stroke-width="2"
+                                                                 stroke-linecap="round" stroke-linejoin="round"
+                                                                 class="h-3 w-3">
+                                                                <path
+                                                                    d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
                                                                 <path d="m9 12 2 2 4-4"></path>
                                                             </svg>
                                                             SA
@@ -232,7 +237,7 @@
                                                         points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                                                     </polygon>
                                                 </svg>
-                                                <span class="text-sm">{{ $loop->index }}</span>
+                                                <span class="text-sm">{{ $loop->index+1 }}</span>
                                             </div>
                                         </td>
                                         <td
@@ -264,14 +269,14 @@
                                         @foreach ($ranklist->events as $event)
                                             @php
                                                 $solvestat = $user->solveStats->where('event_id', $event->id)->first();
-                                                
+
                                                 // Check if strict attendance is enforced for this event and ranklist
-                                                $strictAttendanceEnforced = $ranklist->consider_strict_attendance && 
-                                                                          $event->open_for_attendance && 
+                                                $strictAttendanceEnforced = $ranklist->consider_strict_attendance &&
+                                                                          $event->open_for_attendance &&
                                                                           $event->strict_attendance;
-                                                
+
                                                 // Check if user has attendance for this event
-                                                $hasAttendance = !$strictAttendanceEnforced || 
+                                                $hasAttendance = !$strictAttendanceEnforced ||
                                                                isset($attendanceMap[$user->id . '_' . $event->id]);
                                             @endphp
                                             <td class="px-4 py-2 whitespace-nowrap">
@@ -298,11 +303,11 @@
                                                                         Absent
                                                                     </span>
                                                                 </span>
-                                                        
+
                                                         @php
                                                             $totalUpsolves = $solvestat->solve_count + ($solvestat->upsolve_count ?? 0);
                                                         @endphp
-                                                        
+
                                                         @if ($totalUpsolves > 0)
                                                             <span
                                                                 class="inline-flex items-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset bg-gray-50/80 text-gray-700 ring-gray-600/20 dark:bg-gray-900/20 dark:text-gray-400 dark:ring-gray-800/60 w-fit px-2 py-0.5">
@@ -362,11 +367,12 @@
                                         class="font-medium">{{ $ranklist->weight_of_upsolve }}</span></li>
 
                                 <li>Event weights are displayed under each event title</li>
-                                
+
                                 @if($ranklist->consider_strict_attendance)
                                     <li>
-                                        <span class="font-medium text-orange-600 dark:text-orange-400">Strict Attendance:</span> 
-                                        Events marked with "SA" require attendance. Users without attendance will have their solves counted as upsolves only.
+                                        <span class="font-medium text-orange-600 dark:text-orange-400">Strict Attendance:</span>
+                                        Events marked with "SA" require attendance. Users without attendance will have
+                                        their solves counted as upsolves only.
                                     </li>
                                 @endif
                             </ul>
