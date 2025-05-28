@@ -65,7 +65,13 @@ class UsersRelationManager extends RelationManager
                             ->title('Scores recalculated successfully')
                             ->success()
                             ->send();
+                    }),
+                Tables\Actions\Action::make("Attach Users from Attendance")
+                    ->action(function (): void {
+                        $this->ownerRecord->users()->syncWithoutDetaching(
+                            $this->ownerRecord->events()->with('attendedUsers')->get()->pluck('attendedUsers.*.id')->flatten()->toArray()
 
+                        );
                     }),
                 Tables\Actions\AttachAction::make()
                     ->preloadRecordSelect()
