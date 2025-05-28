@@ -52,6 +52,7 @@ Route::delete('/ranklists/{rankList}/leave', [TrackerController::class, 'leaveRa
 Route::middleware('auth')->group(function () {
     Route::get('/my-account/profile/edit', [ProfileController::class, 'edit'])->name('my-account.profile.edit');
     Route::put('/my-account/profile', [ProfileController::class, 'update'])->name('my-account.profile.update');
+    Route::put('/my-account/password', [ProfileController::class, 'updatePassword'])->name('my-account.password.update');
 });
 
 require __DIR__.'/auth.php';

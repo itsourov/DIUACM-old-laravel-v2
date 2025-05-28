@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Gender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Filament\Notifications\Notification;
 
@@ -85,6 +86,27 @@ class ProfileController extends Controller
         Notification::make()
             ->title('Profile updated successfully')
             ->body('Your profile information has been updated.')
+            ->success()
+            ->send();
+            
+        return back();
+    }
+    
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        
+        $validated = $request->validate([
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+        
+        $user->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+        
+        Notification::make()
+            ->title('Password updated successfully')
+            ->body('Your password has been changed.')
             ->success()
             ->send();
             
