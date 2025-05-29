@@ -21,4 +21,11 @@ class ExtensionController extends Controller
             ->get();
         return VjudgeContestResource::collection($activeContests);
     }
+
+    public function postVjudgeEvents(Request $request, Event $event)
+    {
+       
+
+        return response()->json(['message' => 'Vjudge event updated successfully.'], 200);
+    }
 }
