@@ -228,15 +228,7 @@
                                         <td
                                             class="sticky left-0 z-10 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-gray-800 px-4 py-2 whitespace-nowrap">
                                             <div
-                                                class="flex items-center gap-x-2 text-gray-800 dark:text-neutral-200">
-                                                <svg class="size-4 shrink-0" xmlns="http://www.w3.org/2000/svg"
-                                                     width="24" height="24" viewBox="0 0 24 24"
-                                                     fill="none" stroke="currentColor" stroke-width="2"
-                                                     stroke-linecap="round" stroke-linejoin="round">
-                                                    <polygon
-                                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                                    </polygon>
-                                                </svg>
+                                                class="flex items-center text-gray-800 dark:text-neutral-200">
                                                 <span class="text-sm">{{ $loop->index+1 }}</span>
                                             </div>
                                         </td>
