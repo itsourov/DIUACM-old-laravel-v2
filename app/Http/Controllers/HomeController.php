@@ -34,19 +34,19 @@ class HomeController extends Controller
                 'title' => 'Green Sheet Program',
                 'description' => 'Master programming basics with our curated problem set covering fundamental concepts. Solve 60% to qualify for Blue Sheet.',
                 'icon' => 'file-code2',
-                'link' => '/blogs/green-sheet',
+                'link' => '/blog/green-sheet',
             ],
             [
                 'title' => 'Blue Sheet Advanced',
                 'description' => '1000+ carefully selected problems for advanced programmers. Regular updates based on top solver performance.',
                 'icon' => 'award',
-                'link' => '/blogs/blue-sheet',
+                'link' => '/blog/blue-sheet',
             ],
             [
                 'title' => 'ACM Advanced Camp',
                 'description' => 'Intensive training program for TOPC top performers with mentoring from seniors and alumni.',
                 'icon' => 'target',
-                'link' => '/blogs/advanced-camp',
+                'link' => '/blog/advanced-camp',
             ],
         ];
 
