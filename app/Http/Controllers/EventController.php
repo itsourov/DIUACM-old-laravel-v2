@@ -36,9 +36,10 @@ class EventController extends Controller
     public function show($id): View
     {
         $event = Event::findOrFail($id);
+        $now = Carbon::now();
 
         // Check if the event has already ended
-        $hasEnded = Carbon::now()->isAfter($event->ending_at);
+        $hasEnded = $now->isAfter($event->ending_at);
 
         // Calculate event duration in hours (rounded to 1 decimal place)
         $durationHours = $event->starting_at->diffInMinutes($event->ending_at) / 60;
@@ -54,13 +55,30 @@ class EventController extends Controller
             $hasAttended = $event->attendedUsers()->where('user_id', auth()->id())->exists();
         }
 
+        // Calculate attendance time window
+        $attendanceStartTime = $event->starting_at->copy()->subMinutes(15);
+        $attendanceEndTime = $event->ending_at->copy()->addMinutes(30);
+        $attendanceOpen = $now->between($attendanceStartTime, $attendanceEndTime);
+        
+        // Format messages about attendance time window
+        $attendanceMessage = "";
+        if ($now->isBefore($attendanceStartTime)) {
+            $attendanceMessage = "Attendance will open " . $now->diffForHumans($attendanceStartTime) . " (15 minutes before event starts)";
+        } elseif ($now->isAfter($attendanceEndTime)) {
+            $attendanceMessage = "Attendance period has closed (was available until 30 minutes after event ended)";
+        } else {
+            $attendanceMessage = "Attendance is currently open and will close " . $now->diffForHumans($attendanceEndTime);
+        }
+
         return view('pages.events.show', compact(
             'event',
             'hasEnded',
             'durationFormatted',
             'attendees',
             'attendeesCount',
-            'hasAttended'
+            'hasAttended',
+            'attendanceOpen',
+            'attendanceMessage'
         ));
     }
 
@@ -70,10 +88,24 @@ class EventController extends Controller
     public function markAttendance(Request $request, $id)
     {
         $event = Event::findOrFail($id);
+        $now = Carbon::now();
 
         // Validate if attendance is open
         if (! $event->open_for_attendance) {
             return back()->with('error', 'Attendance is not open for this event.');
+        }
+
+        // Check if attendance is allowed based on time constraints
+        // Can only give attendance from 15 minutes before start to 30 minutes after end
+        $attendanceStartTime = $event->starting_at->copy()->subMinutes(15);
+        $attendanceEndTime = $event->ending_at->copy()->addMinutes(30);
+
+        if ($now->isBefore($attendanceStartTime)) {
+            return back()->with('error', 'Attendance will be open 15 minutes before the event starts.');
+        }
+
+        if ($now->isAfter($attendanceEndTime)) {
+            return back()->with('error', 'Attendance period has ended (closes 30 minutes after event ends).');
         }
 
         // Validate event password if needed

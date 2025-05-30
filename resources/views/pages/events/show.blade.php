@@ -220,6 +220,17 @@
                                 </div>
                             @else
                                 <div class="mt-3">
+                                    <div class="text-sm mb-3 text-slate-700 dark:text-slate-300">
+                                        <div class="flex items-center mb-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 mr-1.5 text-slate-500 dark:text-slate-400" aria-hidden="true">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polyline points="12 6 12 12 16 14"></polyline>
+                                            </svg>
+                                            <span>{{ $attendanceMessage }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($attendanceOpen)
                                     <form action="{{ route('event.attendance', $event->id) }}" method="POST" class="space-y-3">
                                         @csrf
                                         @if($event->event_password)
@@ -235,6 +246,7 @@
                                             Mark Attendance
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             @endif
                         @else
@@ -250,6 +262,9 @@
                                     <div class="ml-3">
                                         <p class="text-sm text-blue-700 dark:text-blue-400">
                                             Please <a href="{{ route('login') }}" class="font-medium underline">login</a> to mark attendance for this event.
+                                        </p>
+                                        <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">
+                                            Note: Attendance is only available from 15 minutes before the event starts until 30 minutes after it ends.
                                         </p>
                                     </div>
                                 </div>
