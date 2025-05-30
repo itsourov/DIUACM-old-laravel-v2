@@ -2,28 +2,29 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\EventType;
-use App\Enums\ParticipationScope;
-use App\Enums\Visibility;
-use App\Filament\Resources\EventResource\Pages;
-use App\Filament\Resources\EventResource\RelationManagers\AttendedUsersRelationManager;
-use App\Filament\Resources\EventResource\RelationManagers\RankListsRelationManager;
-use App\Models\Event;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Exception;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
+use App\Models\Event;
+use App\Enums\EventType;
+use Filament\Forms\Form;
+use App\Enums\Visibility;
 use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
+use Filament\Resources\Resource;
+use App\Enums\ParticipationScope;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Resources\EventResource\Pages;
+use App\Filament\Resources\EventResource\RelationManagers\RankListsRelationManager;
+use App\Filament\Resources\EventResource\RelationManagers\AttendedUsersRelationManager;
 
 class EventResource extends Resource
 {

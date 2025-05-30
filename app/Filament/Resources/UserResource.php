@@ -2,17 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Gender;
-use App\Filament\Resources\UserResource\Pages;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use App\Enums\Gender;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Filament\Resources\UserResource\RelationManagers\AttendedEventsRelationManager;
 
 class UserResource extends Resource
 {
@@ -182,4 +183,11 @@ class UserResource extends Resource
     {
         return ['name', 'email', 'username', 'student_id', 'codeforces_handle'];
     }
+
+    public static function getRelations(): array
+{
+    return [
+        AttendedEventsRelationManager::class,
+    ];
+}
 }
