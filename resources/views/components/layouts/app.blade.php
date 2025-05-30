@@ -14,6 +14,21 @@
     {{-- @filamentStyles --}}
     <!-- Scripts and Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+     @production
+    
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-CSW7LT4FFP"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-CSW7LT4FFP');
+        </script>
+
+    @endproduction
 </head>
 <body class="antialiased flex flex-col min-h-screen ">
 <!-- Background elements -->
