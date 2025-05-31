@@ -82,6 +82,18 @@
                                 </svg>
                                 {{ $ranklist->events->count() }} events
                             </span>
+                            
+                        <a href="{{ route('ranklist.download.csv', $ranklist->id) }}"
+                           class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium bg-green-50/80 text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-800/60 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="h-4 w-4">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download CSV
+                        </a>
 
                         @auth
                             @php
