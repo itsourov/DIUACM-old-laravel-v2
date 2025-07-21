@@ -106,7 +106,7 @@ class User extends Authenticatable implements HasMedia, FilamentUser
     {
         $this
             ->addMediaCollection('avatar')
-            ->useFallbackUrl('/images/anonymous-user.webp')
-            ->useFallbackPath(public_path('/images/anonymous-user.webp'));
+            ->useFallbackUrl(asset('images/anonymous-user.webp'))
+            ->useFallbackPath(public_path('images/anonymous-user.webp'));
     }
 }
